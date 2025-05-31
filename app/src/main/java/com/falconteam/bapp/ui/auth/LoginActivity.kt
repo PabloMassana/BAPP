@@ -1,17 +1,17 @@
 package com.falconteam.bapp.ui.auth
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import com.falconteam.bapp.databinding.ActivityLoginBinding
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import com.falconteam.bapp.ui.theme.BAppTheme
 
-class LoginActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityLoginBinding
-
+class LoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityLoginBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        // TODO: Lógica de login
+        setContent {
+            BAppTheme {
+                // Aquí iría tu pantalla de inicio de sesión
+            }
+        }
     }
 }

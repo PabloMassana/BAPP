@@ -1,7 +1,18 @@
-package com.falconteam.bapp.utils
+package com.falconteam.bapp.ui.utils
+
+enum class UserRole {
+    ADMIN,
+    TEACHER,
+    PARENT
+}
 
 object RolUtils {
-    fun obtenerRolDesdeEmail(email: String): String {
-        return if (email.contains("admin")) "Administrador" else "Usuario"
+    fun getRoleFromString(role: String): UserRole {
+        return when (role.lowercase()) {
+            "admin" -> UserRole.ADMIN
+            "teacher" -> UserRole.TEACHER
+            "parent" -> UserRole.PARENT
+            else -> UserRole.PARENT
+        }
     }
 }

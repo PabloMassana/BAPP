@@ -1,5 +1,9 @@
-package com.falconteam.bapp.viewmodel.state
+package com.falconteam.bapp.ui.viewmodel.state
+
+import com.falconteam.bapp.data.models.Bitacora
 
 data class BitacoraUiState(
-    val bitacoras: List<String> = emptyList() // Actualiza con tu modelo real
+    val isLoading: Boolean = false,
+    val bitacoras: List<Bitacora> = emptyList(),
+    val error: String? = null
 )

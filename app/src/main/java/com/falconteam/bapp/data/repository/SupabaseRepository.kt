@@ -1,82 +1,99 @@
 package com.falconteam.bapp.data.repository
 
 import com.falconteam.bapp.data.models.*
-import kotlinx.coroutines.tasks.await
+import io.github.jan.supabase.SupabaseClient
+import io.github.jan.supabase.postgrest.from
 
-class SupabaseRepository {
+class SupabaseRepository(private val supabase: SupabaseClient) {
 
-    private val db = FirebaseService.db
+    suspend fun iniciarSesion(email: String, password: String): Usuario? {
+        val result = supabase.auth.signInWith(email, password)
+        return result?.user?.let { getUsuarioPorId(it.id) }
+    }
 
-    // === BITÁCORAS ===
+    suspend fun getUsuarioPorId(id: String): Usuario? {
+        return supabase.from("usuarios").select {
+            filter { eq("id", id) }
+        }.decodeSingleOrNull()
+    }
+
+    suspend fun obtenerRolUsuario(id: String): Rol? {
+        return getUsuarioPorId(id)?.rol
+    }
+
+    suspend fun cambiarRolUsuario(usuarioId: String, nuevoRol: Rol) {
+        val usuario = getUsuarioPorId(usuarioId)
+        usuario?.let {
+            val actualizado = it.copy(rol = nuevoRol)
+            supabase.from("usuarios").update(actualizado) {
+                eq("id", usuarioId)
+            }
+        }
+    }
+
     suspend fun agregarBitacora(bitacora: Bitacora) {
-        db.collection("bitacoras").document(bitacora.id).set(bitacora).await()
+        supabase.from("bitacoras").insert(bitacora)
     }
 
     suspend fun obtenerBitacorasPorAlumno(alumnoId: String): List<Bitacora> {
-        return db.collection("bitacoras")
-            .whereEqualTo("alumnoId", alumnoId)
-            .get().await()
-            .documents.mapNotNull { it.toObject<Bitacora>() }
+        return supabase.from("bitacoras").select {
+            filter { eq("idAlumno", alumnoId) }
+            order("fecha", ascending = false)
+        }.decodeList()
     }
 
-    // === EVIDENCIAS ===
+    suspend fun enviarMensaje(mensaje: Mensaje) {
+        supabase.from("mensajes").insert(mensaje)
+    }
+
+    suspend fun obtenerMensajes(conversacionId: String): List<Mensaje> {
+        return supabase.from("mensajes").select {
+            filter { eq("conversacionId", conversacionId) }
+            order("timestamp", ascending = true)
+        }.decodeList()
+    }
+
+    suspend fun obtenerEvidencias(alumnoId: String): List<Evidencia> {
+        return supabase.from("evidencias").select {
+            filter { eq("idAlumno", alumnoId) }
+            order("fecha", ascending = false)
+        }.decodeList()
+    }
+
     suspend fun subirEvidencia(evidencia: Evidencia) {
-        db.collection("evidencias").document(evidencia.id).set(evidencia).await()
+        supabase.from("evidencias").insert(evidencia)
     }
 
-    suspend fun obtenerEvidenciasPorAlumno(alumnoId: String): List<Evidencia> {
-        return db.collection("evidencias")
-            .whereEqualTo("alumnoId", alumnoId)
-            .get().await()
-            .documents.mapNotNull { it.toObject<Evidencia>() }
+    suspend fun obtenerIndicadores(alumnoId: String): List<Indicador> {
+        return supabase.from("indicadores").select {
+            filter { eq("idAlumno", alumnoId) }
+        }.decodeList()
     }
 
-    // === INDICADORES ===
-    suspend fun agregarIndicador(indicador: Indicador) {
-        db.collection("indicadores").document(indicador.id).set(indicador).await()
+    suspend fun obtenerNotificaciones(usuarioId: String): List<Notificacion> {
+        return supabase.from("notificaciones").select {
+            filter { eq("usuarioId", usuarioId) }
+            order("fecha", ascending = false)
+        }.decodeList()
     }
 
-    suspend fun obtenerIndicadoresPorAlumno(alumnoId: String): List<Indicador> {
-        return db.collection("indicadores")
-            .whereEqualTo("alumnoId", alumnoId)
-            .get().await()
-            .documents.mapNotNull { it.toObject<Indicador>() }
+    suspend fun crearCurso(curso: Curso) {
+        supabase.from("cursos").insert(curso)
     }
 
-    // === NOTIFICACIONES ===
-    suspend fun obtenerNotificaciones(): List<Notificacion> {
-        return db.collection("notificaciones")
-            .get().await()
-            .documents.mapNotNull { it.toObject<Notificacion>() }
+    suspend fun obtenerCursosPorMaestro(maestroId: String): List<Curso> {
+        return supabase.from("cursos").select {
+            filter { eq("idMaestro", maestroId) }
+        }.decodeList()
     }
 
-    // === USUARIO ===
-    suspend fun obtenerUsuarioPorId(userId: String): Usuario? {
-        return db.collection("usuarios").document(userId)
-            .get().await().toObject<Usuario>()
-    }
-
-    suspend fun registrarUsuario(usuario: Usuario) {
-        db.collection("usuarios").document(usuario.id).set(usuario).await()
-    }
-
-    // === ALUMNOS ===
-    suspend fun obtenerAlumnoPorId(alumnoId: String): Alumno? {
-        return db.collection("alumnos").document(alumnoId)
-            .get().await().toObject<Alumno>()
-    }
-
-    suspend fun obtenerAlumnosPorMaestro(maestroId: String): List<Alumno> {
-        return db.collection("alumnos")
-            .whereEqualTo("maestroId", maestroId)
-            .get().await()
-            .documents.mapNotNull { it.toObject<Alumno>() }
-    }
-
-    suspend fun obtenerAlumnosPorPadre(padreId: String): List<Alumno> {
-        return db.collection("alumnos")
-            .whereEqualTo("padreId", padreId)
-            .get().await()
-            .documents.mapNotNull { it.toObject<Alumno>() }
+    suspend fun inscribirPadreACurso(usuarioId: String, cursoId: String) {
+        val usuario = getUsuarioPorId(usuarioId)
+        usuario?.let {
+            val actualizado = it.copy(cursosInscritos = it.cursosInscritos + cursoId)
+            supabase.from("usuarios").update(actualizado) {
+                eq("id", usuarioId)
+            }
+        }
     }
 }

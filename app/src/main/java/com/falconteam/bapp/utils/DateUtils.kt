@@ -1,4 +1,4 @@
-package com.falconteam.bapp.utils
+package com.falconteam.bapp.ui.utils
 
 import java.text.SimpleDateFormat
 import java.util.*

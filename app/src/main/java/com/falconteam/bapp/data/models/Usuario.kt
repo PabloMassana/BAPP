@@ -1,15 +1,12 @@
 package com.falconteam.bapp.data.models
 
-data class Usuario(
-    val id: String = "",
-    val nombreCompleto: String = "",
-    val email: String = "",
-    val rol: RolUsuario = RolUsuario.PADRE,
-    val hijosIds: List<String>? = null,       // Solo si es PADRE
-    val alumnosAsignados: List<String>? = null // Solo si es MAESTRO
-)
+enum class Rol { ADMIN, MAESTRO, PADRE }
 
-enum class RolUsuario {
-    MAESTRO,
-    PADRE
-}
+data class Usuario(
+    val id: String,
+    val nombre: String,
+    val email: String,
+    val rol: Rol,
+    val cursosInscritos: List<String> = emptyList(), // cursos si es padre o maestro
+    val hijos: List<String> = emptyList() // si es padre, IDs de alumnos
+)

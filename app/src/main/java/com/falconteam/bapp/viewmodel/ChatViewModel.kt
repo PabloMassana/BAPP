@@ -1,24 +1,44 @@
-package com.falconteam.bapp.viewmodel
+package com.falconteam.bapp.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.falconteam.bapp.domain.usecases.EnviarMensajeChatUseCase
-import com.falconteam.bapp.viewmodel.state.ChatUiState
+import com.falconteam.bapp.data.models.Mensaje
+import com.falconteam.bapp.ui.viewmodel.state.ChatUiState
+import com.falconteam.bapp.utils.SupabaseUtils
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class ChatViewModel(private val enviarMensajeChatUseCase: EnviarMensajeChatUseCase) : ViewModel() {
+class ChatViewModel : ViewModel() {
 
     private val _uiState = MutableStateFlow(ChatUiState())
     val uiState: StateFlow<ChatUiState> = _uiState
 
-    fun enviarMensaje(usuarioId: String, mensaje: String) {
+    fun loadMessages() {
         viewModelScope.launch {
-            enviarMensajeChatUseCase(usuarioId, mensaje).fold(
-                onSuccess = { _uiState.value = _uiState.value.copy(mensajeEnviado = true) },
-                onFailure = { _uiState.value = _uiState.value.copy(error = it.message ?: "Error al enviar") }
-            )
+            _uiState.value = ChatUiState(isLoading = true)
+            try {
+                val messages = SupabaseUtils.postgrest
+                    .from("chat_messages")
+                    .select()
+                    .decodeList<Mensaje>()
+                _uiState.value = ChatUiState(messages = messages)
+            } catch (e: Exception) {
+                _uiState.value = ChatUiState(error = e.message)
+            }
+        }
+    }
+
+    fun sendMessage(message: Mensaje) {
+        viewModelScope.launch {
+            try {
+                SupabaseUtils.postgrest
+                    .from("chat_messages")
+                    .insert(message)
+                loadMessages()
+            } catch (e: Exception) {
+                _uiState.value = _uiState.value.copy(error = e.message)
+            }
         }
     }
 }

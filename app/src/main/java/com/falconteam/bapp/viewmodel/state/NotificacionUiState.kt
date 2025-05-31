@@ -1,5 +1,9 @@
-package com.falconteam.bapp.viewmodel.state
+package com.falconteam.bapp.ui.viewmodel.state
+
+import com.falconteam.bapp.data.models.Notificacion
 
 data class NotificacionUiState(
-    val notificaciones: List<String> = emptyList()
+    val isLoading: Boolean = false,
+    val notificaciones: List<Notificacion> = emptyList(),
+    val error: String? = null
 )

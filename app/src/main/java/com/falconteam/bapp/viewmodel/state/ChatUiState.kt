@@ -1,5 +1,9 @@
-package com.falconteam.bapp.viewmodel.state
+package com.falconteam.bapp.ui.viewmodel.state
+
+import com.falconteam.bapp.data.models.Mensaje
 
 data class ChatUiState(
-    val mensajes: List<String> = emptyList()
+    val isLoading: Boolean = false,
+    val messages: List<Mensaje> = emptyList(),
+    val error: String? = null
 )

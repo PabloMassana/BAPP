@@ -1,11 +1,9 @@
-package com.falconteam.bapp.domain.usecases
+package com.falconteam.bapp.domain.usecases.bitacora
 
 import com.falconteam.bapp.data.models.Bitacora
 import com.falconteam.bapp.data.repository.SupabaseRepository
 
-class AgregarBitacoraUseCase(
-    private val repository: SupabaseRepository
-) {
+class AgregarBitacoraUseCase(private val repository: SupabaseRepository) {
     suspend operator fun invoke(bitacora: Bitacora) {
         repository.agregarBitacora(bitacora)
     }

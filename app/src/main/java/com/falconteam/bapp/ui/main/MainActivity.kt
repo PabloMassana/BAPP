@@ -1,17 +1,17 @@
 package com.falconteam.bapp.ui.main
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import com.falconteam.bapp.databinding.ActivityMainBinding
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import com.falconteam.bapp.ui.theme.BAppTheme
 
-class MainActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityMainBinding
-
+class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        // TODO: Setup NavController o fragmentos
+        setContent {
+            BAppTheme {
+                // Aquí iría tu NavHost para la navegación
+            }
+        }
     }
 }

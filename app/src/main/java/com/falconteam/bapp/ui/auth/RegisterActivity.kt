@@ -1,18 +1,17 @@
 package com.falconteam.bapp.ui.auth
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import com.falconteam.bapp.databinding.ActivityRegisterBinding
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import com.falconteam.bapp.ui.theme.BAppTheme
 
-class RegisterActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityRegisterBinding
-
+class RegisterActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityRegisterBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        // TODO: Lógica de registro
+        setContent {
+            BAppTheme {
+                // Aquí iría tu pantalla de registro
+            }
+        }
     }
 }
-

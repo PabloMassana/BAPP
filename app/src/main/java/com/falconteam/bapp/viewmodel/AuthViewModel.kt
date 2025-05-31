@@ -1,26 +1,40 @@
-package com.falconteam.bapp.viewmodel
+package com.falconteam.bapp.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.falconteam.bapp.utils.SupabaseUtils
+import io.github.jan.supabase.gotrue.User
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import com.falconteam.bapp.domain.usecases.AuthUseCase
 
-class AuthViewModel(private val authUseCase: AuthUseCase) : ViewModel() {
-    fun login(email: String, password: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
+class AuthViewModel : ViewModel() {
+
+    private val _user = MutableStateFlow<User?>(null)
+    val user: StateFlow<User?> = _user
+
+    private val _error = MutableStateFlow<String?>(null)
+    val error: StateFlow<String?> = _error
+
+    fun signIn(email: String, password: String) {
         viewModelScope.launch {
-            authUseCase.login(email, password).fold(
-                onSuccess = { onSuccess() },
-                onFailure = { onError(it.message ?: "Error desconocido") }
-            )
+            try {
+                SupabaseUtils.auth.signInWith(Email = email, Password = password)
+                _user.value = SupabaseUtils.auth.currentUserOrNull()
+            } catch (e: Exception) {
+                _error.value = e.message
+            }
         }
     }
 
-    fun register(email: String, password: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
+    fun signOut() {
         viewModelScope.launch {
-            authUseCase.register(email, password).fold(
-                onSuccess = { onSuccess() },
-                onFailure = { onError(it.message ?: "Error desconocido") }
-            )
+            try {
+                SupabaseUtils.auth.signOut()
+                _user.value = null
+            } catch (e: Exception) {
+                _error.value = e.message
+            }
         }
     }
 }
