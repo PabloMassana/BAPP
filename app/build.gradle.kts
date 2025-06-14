@@ -60,10 +60,26 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    // Ktor client
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.okhttp)
+
+    // Supabase
     implementation(platform(libs.supabase.bom))
     implementation(libs.supabase.postgrest.kt)
     implementation(libs.supabase.auth.kt)
     implementation(libs.supabase.realtime.kt)
+    implementation(libs.supabase.storage.kt)
+
+    // Koin Dependency Injection
+    implementation(platform(libs.koin.bom))
+    implementation(libs.koin.core)
+    implementation(libs.koin.android)
+    implementation(libs.koin.compose)
+    implementation(libs.koin.viewmodel)
+
+    implementation(libs.androidx.navigation.compose)
+
+    //Datetime
+    implementation(libs.kotlinx.datetime)
 }

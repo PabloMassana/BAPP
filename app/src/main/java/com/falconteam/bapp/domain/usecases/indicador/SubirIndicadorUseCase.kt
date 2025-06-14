@@ -5,10 +5,10 @@ import com.falconteam.bapp.data.repository.MainRepository
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class ObtenerIndicadoresUseCase : KoinComponent {
+class SubirIndicadorUseCase : KoinComponent {
     private val repository: MainRepository by inject()
 
-    suspend operator fun invoke(alumnoId: String): List<Indicador> {
-        return repository.obtenerIndicadores(alumnoId)
+    suspend operator fun invoke(indicador: Indicador) {
+        repository.subirIndicador(indicador)
     }
 }
