@@ -1,6 +1,5 @@
-package com.tuapp.di
+package com.falconteam.bapp.di
 
-import GaleriaViewModel
 import com.falconteam.bapp.data.repository.AuthRepository
 import com.falconteam.bapp.data.repository.AuthRepositoryImpl
 import com.falconteam.bapp.data.repository.MainRepository
@@ -25,6 +24,7 @@ import com.falconteam.bapp.domain.usecases.perfil.CerrarSesionUseCase
 import com.falconteam.bapp.ui.auth.login.LoginViewModel
 import com.falconteam.bapp.ui.auth.signup.SignUpViewModel
 import com.falconteam.bapp.ui.main.chat.ChatViewModel
+import com.falconteam.bapp.ui.main.evidencias.GaleriaViewModel
 import com.falconteam.bapp.ui.main.indicadores.IndicadoresViewModel
 import com.falconteam.bapp.ui.main.notifications.NotificacionViewModel
 import com.falconteam.bapp.ui.main.perfil.PerfilViewModel
@@ -64,37 +64,37 @@ val appModule = module {
     factoryOf(::SignUpUseCase)
 
     // Use Cases - Bitácora
-    factoryOf(:: AgregarBitacoraUseCase)
-    factoryOf(:: ObtenerBitacorasUseCase)
+    factoryOf(::AgregarBitacoraUseCase)
+    factoryOf(::ObtenerBitacorasUseCase)
 
     // Use Cases - Chat
     factoryOf(::EnviarMensajeChatUseCase)
     factoryOf(::ObtenerMensajesChatUseCase)
 
     // Use Cases - Evidencias
-    factoryOf(:: ObtenerEvidenciasUseCase)
-    factoryOf(:: SubirEvidenciaUseCase)
+    factoryOf(::ObtenerEvidenciasUseCase)
+    factoryOf(::SubirEvidenciaUseCase)
 
     // Use Cases - Indicadores
-    factoryOf(:: ObtenerIndicadoresUseCase)
-    factoryOf(:: SubirIndicadorUseCase)
+    factoryOf(::ObtenerIndicadoresUseCase)
+    factoryOf(::SubirIndicadorUseCase)
 
     // Use Cases - Notificación
-    factoryOf(:: ObtenerNotificacionesUseCase)
-    factoryOf(:: MarcarNotificacionComoLeidaUseCase)
+    factoryOf(::ObtenerNotificacionesUseCase)
+    factoryOf(::MarcarNotificacionComoLeidaUseCase)
 
     // Use Cases - Perfil
-    factoryOf(:: ActualizarRolUseCase)
-    factoryOf(:: CerrarSesionUseCase)
-    factoryOf(:: ObtenerRolUsuarioUseCase)
+    factoryOf(::ActualizarRolUseCase)
+    factoryOf(::CerrarSesionUseCase)
+    factoryOf(::ObtenerRolUsuarioUseCase)
 
     // ViewModels
     viewModelOf(::LoginViewModel)
     viewModelOf(::SignUpViewModel)
-    viewModelOf(:: ChatViewModel)
-    viewModelOf(:: GaleriaViewModel)
-    viewModelOf(:: IndicadoresViewModel)
-    viewModelOf(:: NotificacionViewModel)
-    viewModelOf(:: PerfilViewModel)
-    viewModelOf(:: BitacoraViewModel)
+    viewModelOf(::ChatViewModel)
+    viewModelOf(::GaleriaViewModel)
+    viewModelOf(::IndicadoresViewModel)
+    viewModelOf(::NotificacionViewModel)
+    viewModelOf(::PerfilViewModel)
+    viewModelOf(::BitacoraViewModel)
 }

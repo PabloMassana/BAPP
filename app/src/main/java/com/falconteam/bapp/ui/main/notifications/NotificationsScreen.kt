@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.falconteam.bapp.ui.theme.BAPPTheme
+import androidx.compose.runtime.getValue
 import com.falconteam.bapp.data.models.Notificacion
 
 @Composable
@@ -32,7 +33,7 @@ fun NotificationsScreen(viewModel: NotificacionViewModel, usuarioId: String) {
         CircularProgressIndicator()
     } else {
         LazyColumn {
-            items(uiState.notificaciones) { noti ->
+            /*items(uiState.notificaciones) { noti ->
                 Card (
                     modifier = Modifier
                         .padding(8.dp)
@@ -49,7 +50,7 @@ fun NotificationsScreen(viewModel: NotificacionViewModel, usuarioId: String) {
                         }
                     }
                 }
-            }
+            }*/
         }
     }
 }
@@ -59,6 +60,6 @@ fun NotificationsScreen(viewModel: NotificacionViewModel, usuarioId: String) {
 @Composable
 private fun NotificactionsScreenPreview() {
     BAPPTheme {
-        NotificationsScreen()
+
     }
 }

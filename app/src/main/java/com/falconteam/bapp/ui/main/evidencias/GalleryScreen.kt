@@ -29,6 +29,6 @@ fun GalleryScreen(
 @Composable
 private fun GalleryScreenPreview() {
     BAPPTheme {
-        GalleryScreen()
+
     }
 }

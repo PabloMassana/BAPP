@@ -8,9 +8,9 @@ class SignUpUseCase: KoinComponent {
 
     private val authRepository by inject<AuthRepository>()
 
-    suspend operator fun invoke(email: String, password: String): Result<Unit> {
+    suspend operator fun invoke(email: String, password: String, username: String): Result<Unit> {
         return try {
-            authRepository.signUp(email, password)
+            authRepository.signUp(email, password, username)
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)

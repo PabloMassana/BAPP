@@ -1,7 +1,7 @@
 package com.falconteam.bapp
 
 import android.app.Application
-import com.tuapp.di.appModule
+import com.falconteam.bapp.di.appModule
 import org.koin.core.context.startKoin
 
 class BaapApplication: Application() {

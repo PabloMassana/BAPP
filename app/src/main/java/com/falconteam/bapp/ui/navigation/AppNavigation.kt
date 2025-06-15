@@ -22,11 +22,11 @@ fun AppNavigation(navController: NavHostController) {
         composable<NavigationRoutes.SignUp> { SignUpScreen() }
         composable<NavigationRoutes.Home> { HomeScreen() }
         composable<NavigationRoutes.Bitacora> { BitacoraScreen() }
-        composable<NavigationRoutes.Chat> { ChatScreen() }
-        composable<NavigationRoutes.Gallery> { GalleryScreen() }
-        composable<NavigationRoutes.Indicadores> { IndicadoresScreen() }
+//        composable<NavigationRoutes.Chat> { ChatScreen() }
+//        composable<NavigationRoutes.Gallery> { GalleryScreen() }
+//        composable<NavigationRoutes.Indicadores> { IndicadoresScreen() }
         composable<NavigationRoutes.Profile> { ProfileScreen() }
-        composable<NavigationRoutes.Notifications> { NotificationsScreen() }
+//        composable<NavigationRoutes.Notifications> { NotificationsScreen() }
         composable<NavigationRoutes.RolSelect> { RolSelectScreen() }
     }
 }

@@ -7,7 +7,7 @@ import kotlinx.coroutines.withContext
 
 interface AuthRepository {
     suspend fun login(email: String, password: String)
-    suspend fun signUp(email: String, password: String): UserInfo?
+    suspend fun signUp(email: String, password: String, username: String): UserInfo?
 }
 
 class AuthRepositoryImpl(
@@ -27,10 +27,11 @@ class AuthRepositoryImpl(
 
     override suspend fun signUp(
         email: String,
-        password: String
+        password: String,
+        username: String
     ): UserInfo? = withContext(Dispatchers.IO) {
         try {
-            supabaseManager.signUpUserSupabase(email, password)
+            supabaseManager.signUpUserSupabase(email, password, username)
         } catch (e: Exception) {
             e.printStackTrace()
             null

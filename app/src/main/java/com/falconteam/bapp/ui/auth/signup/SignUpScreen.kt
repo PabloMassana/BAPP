@@ -1,14 +1,29 @@
 package com.falconteam.bapp.ui.auth.signup
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.falconteam.bapp.R
 import com.falconteam.bapp.ui.theme.BAPPTheme
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -19,10 +34,10 @@ fun SignUpScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     SignUpScreenContent(
-        modifier = Modifier,
         uiState = uiState,
         onEmailChange = viewModel::updateEmail,
         onPasswordChange = viewModel::updatePassword,
+        onUsernameChange = viewModel::updateUsername,
         onSignUpClick = viewModel::signUpAction
     )
 }
@@ -33,46 +48,118 @@ fun SignUpScreenContent(
     uiState: SignUpScreenUiState,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
+    onUsernameChange: (String) -> Unit,
     onSignUpClick: () -> Unit
 ) {
-    Column(
-        modifier = modifier
-            .padding(16.dp)
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.Center
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                Brush.verticalGradient(
+                    colors = listOf(Color(0xFFFFB8A9), Color(0xFFFF7F56))
+                )
+            ),
+        contentAlignment = Alignment.Center
     ) {
-        TextField(
-            value = uiState.email,
-            onValueChange = onEmailChange,
-            label = { Text("Correo electrónico") },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        TextField(
-            value = uiState.password,
-            onValueChange = onPasswordChange,
-            label = { Text("Contraseña") },
-            visualTransformation = PasswordVisualTransformation(),
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Button(
-            onClick = onSignUpClick,
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Registrarse")
-        }
-
-        if (uiState.errorMessage != null) {
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = uiState.errorMessage,
-                color = MaterialTheme.colorScheme.error
+            // Icono superior
+            Spacer(modifier = Modifier.height(40.dp))
+            Image(
+                painter = painterResource(id =  R.mipmap.logo_foreground), // Cambia por tu recurso real
+                contentDescription = "Icono de registro",
+                modifier = Modifier.size(120.dp)
             )
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Caja de contenido
+            Column(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth()
+                    .background(Color(0xAA4B4B4B), RoundedCornerShape(16.dp))
+                    .padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "Registrarse",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                OutlinedTextField(
+                    value = uiState.username,
+                    onValueChange = onUsernameChange,
+                    label = { Text("Username") },
+                    leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(24.dp)
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                OutlinedTextField(
+                    value = uiState.email,
+                    onValueChange = onEmailChange,
+                    label = { Text("Correo electronico") },
+                    leadingIcon = { Icon(Icons.Default.Email, contentDescription = null) },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(24.dp)
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                OutlinedTextField(
+                    value = uiState.password,
+                    onValueChange = onPasswordChange,
+                    label = { Text("Password") },
+                    leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
+                    visualTransformation = PasswordVisualTransformation(),
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(24.dp)
+                )
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                Button(
+                    onClick = onSignUpClick,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp),
+                    shape = RoundedCornerShape(24.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF7F56))
+                ) {
+                    Text("Registrarse")
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
+                    text = "¿Ya tienes cuenta?",
+                    color = Color.White,
+                    fontSize = 14.sp
+                )
+                Text(
+                    text = "Inicio de sesión",
+                    color = Color(0xFF363636),
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold
+                )
+
+                if (uiState.errorMessage != null) {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = uiState.errorMessage,
+                        color = MaterialTheme.colorScheme.error,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
         }
     }
 }
@@ -82,10 +169,10 @@ fun SignUpScreenContent(
 private fun SignUpScreenPreview() {
     BAPPTheme {
         SignUpScreenContent(
-            modifier = Modifier,
             uiState = SignUpScreenUiState(),
             onEmailChange = {},
             onPasswordChange = {},
+            onUsernameChange = {},
             onSignUpClick = {}
         )
     }

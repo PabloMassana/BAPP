@@ -16,7 +16,7 @@ import io.github.jan.supabase.storage.storage
 
 interface SupabaseManager {
     suspend fun loginSupabase(emailUser: String, passwordUser: String)
-    suspend fun signUpUserSupabase(emailUser: String, passwordUser: String): UserInfo?
+    suspend fun signUpUserSupabase(emailUser: String, passwordUser: String, userName: String): UserInfo?
     suspend fun cerrarSesion()
 
     suspend fun insertarMensajeChat(mensaje: Mensaje)
@@ -49,10 +49,11 @@ class SupabaseManagerImpl(
         }
     }
 
-    override suspend fun signUpUserSupabase(emailUser: String, passwordUser: String): UserInfo? {
+    override suspend fun signUpUserSupabase(emailUser: String, passwordUser: String, userName: String): UserInfo? {
         return supabaseClient.auth.signUpWith(Email) {
             email = emailUser
             password = passwordUser
+            //userName = userName
         }
     }
 
@@ -128,7 +129,7 @@ class SupabaseManagerImpl(
     override suspend fun marcarNotificacionComoLeida(notificacionId: String) {
         supabaseClient.from("notificaciones")
             .update(
-                update = mapOf("leida" to true)
+                update = {}
             ) {
                 filter { eq("id", notificacionId) }
             }
@@ -145,7 +146,7 @@ class SupabaseManagerImpl(
     override suspend fun actualizarRolUsuario(userId: String, nuevoRol: String) {
         supabaseClient.from("usuarios")
             .update(
-                update = mapOf("rol" to nuevoRol)
+                update = {}
             ) {
                 filter { eq("id", userId) }
             }

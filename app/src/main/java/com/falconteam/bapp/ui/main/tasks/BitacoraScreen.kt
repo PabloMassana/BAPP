@@ -6,6 +6,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.falconteam.bapp.ui.theme.BAPPTheme
 import org.koin.compose.viewmodel.koinViewModel
+import androidx.compose.runtime.getValue
+
 
 @Composable
 fun BitacoraScreen(

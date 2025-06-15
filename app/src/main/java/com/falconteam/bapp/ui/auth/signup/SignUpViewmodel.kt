@@ -24,11 +24,16 @@ class SignUpViewModel(
         _uiState.update { it.copy(password = password) }
     }
 
+    fun updateUsername(username: String) {
+        _uiState.update { it.copy(username = username) }
+    }
+
     fun signUpAction() {
         viewModelScope.launch {
             val result = signUpUseCase(
                 email = _uiState.value.email,
-                password = _uiState.value.password
+                password = _uiState.value.password,
+                username = _uiState.value.username // Pasa el username
             )
 
             result.onSuccess {
