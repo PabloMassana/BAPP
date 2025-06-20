@@ -1,5 +1,6 @@
 package com.falconteam.bapp.data.supabase
 
+import com.falconteam.bapp.data.entity.UserEntity
 import com.falconteam.bapp.data.models.Bitacora
 import com.falconteam.bapp.data.models.Evidencia
 import com.falconteam.bapp.data.models.Indicador
@@ -13,11 +14,20 @@ import io.github.jan.supabase.auth.user.UserInfo
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Order
 import io.github.jan.supabase.storage.storage
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
 interface SupabaseManager {
     suspend fun loginSupabase(emailUser: String, passwordUser: String)
-    suspend fun signUpUserSupabase(emailUser: String, passwordUser: String, userName: String): UserInfo?
+    suspend fun signUpUserSupabase(
+        emailUser: String,
+        passwordUser: String,
+        userName: String
+    ): UserInfo?
+
     suspend fun cerrarSesion()
+    suspend fun insertarUsuario(usuario: UserEntity): UserEntity
+    suspend fun obtenerUsuario(idUsuario: String): UserEntity
 
     suspend fun insertarMensajeChat(mensaje: Mensaje)
     suspend fun obtenerMensajesChat(conversacionId: String): List<Mensaje>
@@ -49,17 +59,36 @@ class SupabaseManagerImpl(
         }
     }
 
-    override suspend fun signUpUserSupabase(emailUser: String, passwordUser: String, userName: String): UserInfo? {
-        return supabaseClient.auth.signUpWith(Email) {
-            email = emailUser
-            password = passwordUser
-            //userName = userName
+    override suspend fun signUpUserSupabase(
+        emailUser: String,
+        passwordUser: String,
+        userName: String
+    ): UserInfo? = supabaseClient.auth.signUpWith(Email) {
+        email = emailUser
+        password = passwordUser
+        data = buildJsonObject {
+            put("username", userName)
         }
     }
+
 
     override suspend fun cerrarSesion() {
         supabaseClient.auth.signOut()
     }
+
+    override suspend fun insertarUsuario(usuario: UserEntity): UserEntity {
+        return supabaseClient.from("usuario").insert(usuario) {
+            select()
+        }.decodeSingle<UserEntity>()
+    }
+
+    override suspend fun obtenerUsuario(idUsuario: String): UserEntity =
+        supabaseClient.from("usuario").select {
+            filter {
+                eq("id", idUsuario)
+            }
+        }.decodeSingle<UserEntity>()
+
 
     override suspend fun insertarMensajeChat(mensaje: Mensaje) {
         supabaseClient.from("chat_messages").insert(mensaje)
@@ -84,7 +113,8 @@ class SupabaseManagerImpl(
     }
 
     override suspend fun subirEvidencia(evidencia: Evidencia, fileBytes: ByteArray) {
-        val bucket = supabaseClient.storage.from("evidencias") // corregido "evidecias" → "evidencias"
+        val bucket =
+            supabaseClient.storage.from("evidencias") // corregido "evidecias" → "evidencias"
         bucket.upload(evidencia.archivoUrl, fileBytes) {
             upsert = false
         }

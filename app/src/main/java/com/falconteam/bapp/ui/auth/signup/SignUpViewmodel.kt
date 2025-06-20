@@ -30,16 +30,22 @@ class SignUpViewModel(
 
     fun signUpAction() {
         viewModelScope.launch {
-            val result = signUpUseCase(
+            _uiState.update { it.copy(isLoading = true) }
+
+            signUpUseCase(
                 email = _uiState.value.email,
                 password = _uiState.value.password,
                 username = _uiState.value.username // Pasa el username
-            )
-
-            result.onSuccess {
-                _uiState.update { it.copy(signUpSuccessful = true) }
+            ).onSuccess { user ->
+                _uiState.update {
+                    it.copy(
+                        signUpSuccessful = true,
+                        isLoading = false,
+                        idUsuario = user?.id.toString()
+                    )
+                }
             }.onFailure { e ->
-                _uiState.update { it.copy(errorMessage = e.message) }
+                _uiState.update { it.copy(errorMessage = e.message, isLoading = false) }
             }
         }
     }

@@ -2,6 +2,7 @@ package com.falconteam.bapp.ui.auth.login
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -48,7 +49,8 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun LoginScreen(
-    viewModel: LoginViewModel = koinViewModel()
+    viewModel: LoginViewModel = koinViewModel(),
+    onNavigate: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -57,7 +59,8 @@ fun LoginScreen(
         uiState = uiState,
         onLoginClick = viewModel::loginAction,
         onEmailChange = viewModel::updateEmail,
-        onPasswordChange = viewModel::updatePassword
+        onPasswordChange = viewModel::updatePassword,
+        onNavigate = onNavigate
     )
 }
 
@@ -67,7 +70,8 @@ fun LoginScreenContent(
     uiState: LoginScreenUiState,
     onLoginClick: () -> Unit = {},
     onEmailChange: (String) -> Unit = {},
-    onPasswordChange: (String) -> Unit = {}
+    onPasswordChange: (String) -> Unit = {},
+    onNavigate: () -> Unit = {}
 ) {
     Box(
         modifier = modifier
@@ -173,7 +177,7 @@ fun LoginScreenContent(
                                 append("Registrarse")
                             }
                         },
-                        modifier = Modifier.padding(top = 8.dp)
+                        modifier = Modifier.padding(top = 8.dp).clickable { onNavigate() }
                     )
                 }
             }

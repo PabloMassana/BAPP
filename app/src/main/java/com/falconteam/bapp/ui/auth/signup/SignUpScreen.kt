@@ -1,7 +1,9 @@
 package com.falconteam.bapp.ui.auth.signup
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -10,11 +12,13 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -29,7 +33,8 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun SignUpScreen(
-    viewModel: SignUpViewModel = koinViewModel()
+    viewModel: SignUpViewModel = koinViewModel(),
+    onNavigate: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -38,19 +43,32 @@ fun SignUpScreen(
         onEmailChange = viewModel::updateEmail,
         onPasswordChange = viewModel::updatePassword,
         onUsernameChange = viewModel::updateUsername,
-        onSignUpClick = viewModel::signUpAction
+        onSignUpClick = viewModel::signUpAction,
+        onNavigate = onNavigate
     )
 }
 
 @Composable
 fun SignUpScreenContent(
-    modifier: Modifier = Modifier,
     uiState: SignUpScreenUiState,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onUsernameChange: (String) -> Unit,
-    onSignUpClick: () -> Unit
+    onSignUpClick: () -> Unit,
+    onNavigate: () -> Unit
 ) {
+    val context = LocalContext.current
+
+    LaunchedEffect(uiState.signUpSuccessful) {
+        if (uiState.signUpSuccessful) {
+            Toast.makeText(
+                context,
+                "Registro exitoso",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -92,49 +110,68 @@ fun SignUpScreenContent(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                OutlinedTextField(
+                TextField(
                     value = uiState.username,
                     onValueChange = onUsernameChange,
                     label = { Text("Username") },
                     leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(24.dp)
+                    shape = RoundedCornerShape(24.dp),
+                    colors = TextFieldDefaults.colors(
+                        unfocusedIndicatorColor = Color.Transparent,
+                        focusedIndicatorColor = Color.Transparent
+                    )
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                OutlinedTextField(
+                TextField(
                     value = uiState.email,
                     onValueChange = onEmailChange,
                     label = { Text("Correo electronico") },
                     leadingIcon = { Icon(Icons.Default.Email, contentDescription = null) },
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(24.dp)
+                    shape = RoundedCornerShape(24.dp),
+                    colors = TextFieldDefaults.colors(
+                        unfocusedIndicatorColor = Color.Transparent,
+                        focusedIndicatorColor = Color.Transparent
+                    )
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                OutlinedTextField(
+                TextField(
                     value = uiState.password,
                     onValueChange = onPasswordChange,
                     label = { Text("Password") },
                     leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
                     visualTransformation = PasswordVisualTransformation(),
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(24.dp)
+                    shape = RoundedCornerShape(24.dp),
+                    colors = TextFieldDefaults.colors(
+                        unfocusedIndicatorColor = Color.Transparent,
+                        focusedIndicatorColor = Color.Transparent
+                    )
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                Button(
-                    onClick = onSignUpClick,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(48.dp),
-                    shape = RoundedCornerShape(24.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF7F56))
-                ) {
-                    Text("Registrarse")
+                if (uiState.isLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(24.dp),
+                        color = Color(0xFFFF7F56)
+                    )
+                } else {
+                    Button(
+                        onClick = onSignUpClick,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(48.dp),
+                        shape = RoundedCornerShape(24.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF7F56))
+                    ) {
+                        Text("Registrarse")
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -145,8 +182,9 @@ fun SignUpScreenContent(
                     fontSize = 14.sp
                 )
                 Text(
+                    modifier = Modifier.clickable { onNavigate() },
                     text = "Inicio de sesión",
-                    color = Color(0xFF363636),
+                    color = Color(0xFFFF7F56),
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -173,7 +211,8 @@ private fun SignUpScreenPreview() {
             onEmailChange = {},
             onPasswordChange = {},
             onUsernameChange = {},
-            onSignUpClick = {}
+            onSignUpClick = {},
+            onNavigate = {}
         )
     }
 }

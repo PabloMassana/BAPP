@@ -18,8 +18,16 @@ import com.falconteam.bapp.ui.main.tasks.BitacoraScreen
 @Composable
 fun AppNavigation(navController: NavHostController) {
     NavHost(navController = navController, startDestination = NavigationRoutes.Login) {
-        composable<NavigationRoutes.Login> { LoginScreen() }
-        composable<NavigationRoutes.SignUp> { SignUpScreen() }
+        composable<NavigationRoutes.Login> {
+            LoginScreen {
+                navController.navigate(NavigationRoutes.SignUp)
+            }
+        }
+        composable<NavigationRoutes.SignUp> {
+            SignUpScreen {
+                navController.navigate(NavigationRoutes.Login)
+            }
+        }
         composable<NavigationRoutes.Home> { HomeScreen() }
         composable<NavigationRoutes.Bitacora> { BitacoraScreen() }
 //        composable<NavigationRoutes.Chat> { ChatScreen() }
