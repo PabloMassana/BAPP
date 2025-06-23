@@ -36,6 +36,7 @@ fun SignUpScreen(
     viewModel: SignUpViewModel = koinViewModel(),
     onNavigate: () -> Unit = {}
 ) {
+
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     SignUpScreenContent(

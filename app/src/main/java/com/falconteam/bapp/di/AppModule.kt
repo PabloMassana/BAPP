@@ -58,6 +58,8 @@ val appModule = module {
         MainRepositoryImpl(get())
     }
 
+
+
     // Use Cases - Autenticación
     factoryOf(::LoginUseCase)
     factoryOf(::ObtenerRolUsuarioUseCase)
