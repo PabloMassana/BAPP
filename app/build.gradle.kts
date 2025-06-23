@@ -84,5 +84,6 @@ dependencies {
     implementation(libs.kotlinx.datetime)
 
     //Data Store
+    implementation(libs.androidx.datastore.core)
     implementation(libs.androidx.datastore.preferences)
 }
