@@ -24,7 +24,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.falconteam.bapp.data.models.Actividad
+import com.falconteam.bapp.data.models.Reporte
 import com.falconteam.bapp.ui.theme.BAPPTheme
+import com.falconteam.bapp.R
 
 @Composable
 fun HomeParentScreen(
