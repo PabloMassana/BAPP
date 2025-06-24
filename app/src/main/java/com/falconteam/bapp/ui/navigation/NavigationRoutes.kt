@@ -14,6 +14,18 @@ sealed class NavigationRoutes {
     data object Home: NavigationRoutes()
 
     @Serializable
+    data object MyChild: NavigationRoutes()
+
+    @Serializable
+    data object Reports: NavigationRoutes()
+
+    @Serializable
+    data object HomeAdmin: NavigationRoutes()
+
+    @Serializable
+    data object HomeTeacher: NavigationRoutes()
+
+    @Serializable
     data object Bitacora: NavigationRoutes()
 
     @Serializable

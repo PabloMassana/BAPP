@@ -1,0 +1,154 @@
+package com.falconteam.bapp.data.supabase
+
+import com.falconteam.bapp.data.entity.UserEntity
+import com.falconteam.bapp.data.models.Bitacora
+import com.falconteam.bapp.data.models.Evidencia
+import com.falconteam.bapp.data.models.Indicador
+import com.falconteam.bapp.data.models.Mensaje
+import com.falconteam.bapp.data.models.Notificacion
+import io.github.jan.supabase.SupabaseClient
+import io.github.jan.supabase.auth.auth
+import io.github.jan.supabase.auth.providers.builtin.Email
+import io.github.jan.supabase.auth.user.UserInfo
+import io.github.jan.supabase.postgrest.from
+import io.github.jan.supabase.postgrest.query.Order
+import io.github.jan.supabase.storage.storage
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
+
+class SupabaseManagerImpl(
+    private val supabaseClient: SupabaseClient
+) : SupabaseManager {
+
+    override fun getSessionTokenOrNull(): String? = supabaseClient.auth.currentAccessTokenOrNull()
+
+    override suspend fun loginSupabase(emailUser: String, passwordUser: String): String? {
+        supabaseClient.auth.signInWith(Email) {
+            email = emailUser
+            password = passwordUser
+        }
+
+        return getSessionTokenOrNull()
+    }
+
+    override suspend fun signUpUserSupabase(
+        emailUser: String,
+        passwordUser: String,
+        userName: String
+    ): UserInfo? = supabaseClient.auth.signUpWith(Email) {
+        email = emailUser
+        password = passwordUser
+        data = buildJsonObject {
+            put("username", userName)
+        }
+    }
+
+
+    override suspend fun cerrarSesion() {
+        supabaseClient.auth.signOut()
+    }
+
+    override suspend fun insertarUsuario(usuario: UserEntity): UserEntity {
+        return supabaseClient.from("usuario").insert(usuario) {
+            select()
+        }.decodeSingle<UserEntity>()
+    }
+
+    override suspend fun obtenerUsuarioPorId(idUsuario: String): UserEntity =
+        supabaseClient.from("usuario").select {
+            filter {
+                eq("id", idUsuario)
+            }
+        }.decodeSingle<UserEntity>()
+
+    override suspend fun obtenerUsuarioPorEmail(email: String): UserEntity? =
+        supabaseClient.from("usuario").select {
+            filter {
+                eq("email", email)
+            }
+        }.decodeSingleOrNull<UserEntity>()
+
+    override suspend fun insertarMensajeChat(mensaje: Mensaje) {
+        supabaseClient.from("chat_messages").insert(mensaje)
+    }
+
+    override suspend fun obtenerMensajesChat(conversacionId: String): List<Mensaje> {
+        return supabaseClient.from("chat_messages")
+            .select {
+                filter { eq("conversacionId", conversacionId) }
+                order("timestamp", Order.ASCENDING)
+            }
+            .decodeList()
+    }
+
+    override suspend fun obtenerEvidencias(idCurso: String): List<Evidencia> {
+        return supabaseClient.from("evidencias")
+            .select {
+                filter { eq("idCurso", idCurso) }
+                order("fecha", Order.DESCENDING)
+            }
+            .decodeList()
+    }
+
+    override suspend fun subirEvidencia(evidencia: Evidencia, fileBytes: ByteArray) {
+        val bucket =
+            supabaseClient.storage.from("evidencias") // corregido "evidecias" → "evidencias"
+        bucket.upload(evidencia.archivoUrl, fileBytes) {
+            upsert = false
+        }
+        supabaseClient.from("evidencias").insert(evidencia)
+    }
+
+    override suspend fun obtenerIndicadores(idAlumno: String): List<Indicador> {
+        return supabaseClient.from("indicadores")
+            .select {
+                filter { eq("idAlumno", idAlumno) }
+                order("fecha", Order.DESCENDING)
+            }
+            .decodeList()
+    }
+
+    override suspend fun subirIndicador(indicador: Indicador) {
+        supabaseClient.from("indicadores").insert(indicador)
+    }
+
+    override suspend fun obtenerBitacorasPorAlumno(idAlumno: String): List<Bitacora> {
+        return supabaseClient.from("bitacoras")
+            .select {
+                filter { eq("idAlumno", idAlumno) }
+                order("fecha", Order.DESCENDING)
+            }
+            .decodeList()
+    }
+
+    override suspend fun agregarBitacora(bitacora: Bitacora) {
+        supabaseClient.from("bitacoras").insert(bitacora)
+    }
+
+    override suspend fun obtenerNotificaciones(usuarioId: String): List<Notificacion> {
+        return supabaseClient.from("notificaciones")
+            .select {
+                filter { eq("destinatario_id", usuarioId) }
+                order("fecha", Order.DESCENDING)
+            }
+            .decodeList()
+    }
+
+    override suspend fun marcarNotificacionComoLeida(notificacionId: String) {
+        supabaseClient.from("notificaciones")
+            .update(
+                update = {}
+            ) {
+                filter { eq("id", notificacionId) }
+            }
+    }
+
+    override suspend fun actualizarRolUsuario(userId: String, nuevoRol: String) {
+        supabaseClient.from("usuarios")
+            .update(
+                update = {}
+            ) {
+                filter { eq("id", userId) }
+            }
+    }
+}

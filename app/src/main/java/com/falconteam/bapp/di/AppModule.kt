@@ -1,5 +1,7 @@
 package com.falconteam.bapp.di
 
+import com.falconteam.bapp.data.local.DataStoreHelper
+import com.falconteam.bapp.data.local.createDataStore
 import com.falconteam.bapp.data.repository.AuthRepository
 import com.falconteam.bapp.data.repository.AuthRepositoryImpl
 import com.falconteam.bapp.data.repository.MainRepository
@@ -35,6 +37,7 @@ import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.Postgrest
 import org.koin.core.module.dsl.factoryOf
+import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
@@ -46,12 +49,21 @@ val appModule = module {
         }
     }
 
+    single {
+        createDataStore(context = get())
+    }
+
+    singleOf(::DataStoreHelper)
+
     single<SupabaseManager> {
         SupabaseManagerImpl(get())
     }
 
     single<AuthRepository> {
-        AuthRepositoryImpl(get())
+        AuthRepositoryImpl(
+            supabaseManager = get(),
+            dataStoreHelper = get()
+        )
     }
 
     single<MainRepository> {

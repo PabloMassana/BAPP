@@ -27,6 +27,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,16 +44,27 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.falconteam.bapp.R
+import com.falconteam.bapp.ui.navigation.NavigationRoutes
 import com.falconteam.bapp.ui.theme.BAPPTheme
+import com.falconteam.bapp.utils.UserRole
 import io.github.jan.supabase.realtime.Column
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel = koinViewModel(),
-    onNavigate: () -> Unit = {}
+    onNavigate: (NavigationRoutes) -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(uiState.userRole) {
+        when (uiState.userRole) {
+            UserRole.ADMIN -> onNavigate(NavigationRoutes.HomeAdmin)
+            UserRole.TEACHER -> onNavigate(NavigationRoutes.HomeTeacher)
+            UserRole.PARENT -> onNavigate(NavigationRoutes.Home)
+            null -> Unit
+        }
+    }
 
     LoginScreenContent(
         modifier = Modifier.fillMaxSize(),
@@ -60,7 +72,9 @@ fun LoginScreen(
         onLoginClick = viewModel::loginAction,
         onEmailChange = viewModel::updateEmail,
         onPasswordChange = viewModel::updatePassword,
-        onNavigate = onNavigate
+        onNavigateSignUp = {
+            onNavigate(NavigationRoutes.SignUp)
+        }
     )
 }
 
@@ -71,7 +85,7 @@ fun LoginScreenContent(
     onLoginClick: () -> Unit = {},
     onEmailChange: (String) -> Unit = {},
     onPasswordChange: (String) -> Unit = {},
-    onNavigate: () -> Unit = {}
+    onNavigateSignUp: () -> Unit
 ) {
     Box(
         modifier = modifier
@@ -177,7 +191,7 @@ fun LoginScreenContent(
                                 append("Registrarse")
                             }
                         },
-                        modifier = Modifier.padding(top = 8.dp).clickable { onNavigate() }
+                        modifier = Modifier.padding(top = 8.dp).clickable { onNavigateSignUp() }
                     )
                 }
             }
@@ -195,7 +209,8 @@ private fun LoginScreenPreview() {
             uiState = LoginScreenUiState(),
             onEmailChange = {},
             onPasswordChange = {},
-            onLoginClick = {}
+            onLoginClick = {},
+            onNavigateSignUp = {}
         )
     }
 }

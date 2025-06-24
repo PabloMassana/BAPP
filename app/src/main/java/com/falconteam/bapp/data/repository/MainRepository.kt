@@ -1,5 +1,6 @@
 package com.falconteam.bapp.data.repository
 
+import com.falconteam.bapp.data.entity.UserEntity
 import com.falconteam.bapp.data.models.Bitacora
 import com.falconteam.bapp.data.models.Evidencia
 import com.falconteam.bapp.data.models.Indicador
@@ -26,7 +27,7 @@ interface MainRepository {
     suspend fun obtenerNotificaciones(usuarioId: String): List<Notificacion>
     suspend fun marcarNotificacionComoLeida(notificacionId: String)
 
-    suspend fun obtenerUsuario(userId: String): Usuario
+    suspend fun obtenerUsuario(userId: String): UserEntity
     suspend fun actualizarRol(userId: String, nuevoRol: String)
     suspend fun cerrarSesion()
 
@@ -77,7 +78,7 @@ class MainRepositoryImpl(
         supabaseManager.marcarNotificacionComoLeida(notificacionId)
     }
 
-    override suspend fun obtenerUsuario(userId: String): Usuario {
+    override suspend fun obtenerUsuario(userId: String): UserEntity {
         return supabaseManager.obtenerUsuarioPorId(userId)
     }
 

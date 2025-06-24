@@ -1,18 +1,18 @@
-package com.falconteam.bapp.ui.utils
+package com.falconteam.bapp.utils
 
 enum class UserRole {
     ADMIN,
     TEACHER,
-    PARENT
-}
+    PARENT;
 
-object RolUtils {
-    fun getRoleFromString(role: String): UserRole {
-        return when (role.lowercase()) {
-            "admin" -> UserRole.ADMIN
-            "teacher" -> UserRole.TEACHER
-            "parent" -> UserRole.PARENT
-            else -> UserRole.PARENT
+    companion object {
+        fun getRoleFromString(role: String): UserRole {
+            return when (role.lowercase()) {
+                "ADMIN" -> ADMIN
+                "TEACHER" -> TEACHER
+                "PARENT" -> PARENT
+                else -> PARENT
+            }
         }
     }
 }

@@ -37,7 +37,7 @@ class PerfilViewModel(
         viewModelScope.launch {
             try {
                 actualizarRolUseCase(userId, nuevoRol)
-                val actualizado = _uiState.value.usuario?.copy(rol = Rol.valueOf(nuevoRol))
+                val actualizado = _uiState.value.usuario?.copy(rol = nuevoRol)
                 _uiState.value = _uiState.value.copy(usuario = actualizado)
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(error = e.localizedMessage)

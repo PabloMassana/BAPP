@@ -6,11 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.falconteam.bapp.ui.auth.login.LoginScreen
 import com.falconteam.bapp.ui.auth.signup.SignUpScreen
-import com.falconteam.bapp.ui.main.HomeScreen
-import com.falconteam.bapp.ui.main.chat.ChatScreen
-import com.falconteam.bapp.ui.main.evidencias.GalleryScreen
-import com.falconteam.bapp.ui.main.indicadores.IndicadoresScreen
-import com.falconteam.bapp.ui.main.notifications.NotificationsScreen
+import com.falconteam.bapp.ui.main.homeparent.HomeParentScreen
 import com.falconteam.bapp.ui.main.perfil.ProfileScreen
 import com.falconteam.bapp.ui.main.roles.RolSelectScreen
 import com.falconteam.bapp.ui.main.tasks.BitacoraScreen
@@ -28,7 +24,7 @@ fun AppNavigation(navController: NavHostController) {
                 navController.navigate(NavigationRoutes.Login)
             }
         }
-        composable<NavigationRoutes.Home> { HomeScreen() }
+        composable<NavigationRoutes.Home> { HomeParentScreen() }
         composable<NavigationRoutes.Bitacora> { BitacoraScreen() }
 //        composable<NavigationRoutes.Chat> { ChatScreen() }
 //        composable<NavigationRoutes.Gallery> { GalleryScreen() }
