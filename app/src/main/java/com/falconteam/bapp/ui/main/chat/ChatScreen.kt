@@ -1,5 +1,5 @@
-package com.falconteam.bapp.ui.main.chat
-
+    package com.falconteam.bapp.ui.main.chat
+/*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -72,3 +72,4 @@ fun ChatScreen(
         }
     }
 }
+*/
