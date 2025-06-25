@@ -8,8 +8,15 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Face
+import androidx.compose.material.icons.filled.Logout
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -25,202 +32,158 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.falconteam.bapp.ui.admin.viewmodel.AdminHomeViewModel
 import com.falconteam.bapp.ui.theme.BAPPTheme
 
-
 @Composable
 fun AdminHomeScreen(viewModel: AdminHomeViewModel = viewModel()) {
     val grupos by viewModel.grupos.collectAsState()
     val actividades by viewModel.actividades.collectAsState()
 
-    val PaleCardColor = Color(0xFFFFD6C9)
-    val OrangeButtonColor = Color(0xFFFF7F56)
+    val paleCard = Color(0xFFFFD6C9)
+    val mainBackground = Brush.verticalGradient(listOf(Color(0xFFFFA48B), Color.White))
+    val buttonColor = Color(0xFFEB786F)
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    colors = listOf(Color(0xFFFF7F56), Color(0xFFFFB8A9))
-                )
-            )
-    ) {
+    Scaffold(
+        bottomBar = {
+            NavigationBar(
+                containerColor = Color.White
+            ) {
+                NavigationBarItem(selected = true, onClick = { }, icon = {
+                    Icon(Icons.Default.Add, contentDescription = "Agregar")
+                }, label = { Text("Agregar") })
+                NavigationBarItem(selected = false, onClick = { }, icon = {
+                    Icon(Icons.Default.Delete, contentDescription = "Borrar")
+                }, label = { Text("Borrar") })
+                NavigationBarItem(selected = false, onClick = { }, icon = {
+                    Icon(Icons.Default.Person, contentDescription = "Docentes")
+                }, label = { Text("Docentes") })
+            }
+        },
+        floatingActionButton = {
+            FloatingActionButton(onClick = { }, containerColor = buttonColor) {
+                Icon(Icons.Default.Add, contentDescription = "Add")
+            }
+        },
+        containerColor = Color.Transparent
+    ) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .background(mainBackground)
+                .padding(padding)
                 .padding(16.dp)
+                .verticalScroll(rememberScrollState())
         ) {
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                IconButton(onClick = { }) {
-                    Icon(
-                        imageVector = Icons.Default.Notifications,
-                        contentDescription = "Notificaciones",
-                        tint = Color.White
-                    )
-                }
-
-                IconButton(onClick = { }) {
-                    Icon(
-                        imageVector = Icons.Default.Settings,
-                        contentDescription = "Configuración",
-                        tint = Color.White
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(24.dp))
-
+            // Header
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(PaleCardColor, RoundedCornerShape(16.dp))
+                    .background(paleCard, RoundedCornerShape(24.dp))
                     .padding(24.dp)
             ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        "Bienvenido, Docente",
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        "Nombre del Docente",
-                        fontSize = 16.sp,
-                        color = Color.DarkGray
-                    )
-                    Spacer(modifier = Modifier.height(12.dp))
+                Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
+                    Text("Bienvenido", fontSize = 16.sp, fontWeight = FontWeight.Medium)
+                    Text("Administración", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                    Spacer(Modifier.height(12.dp))
                     Box(
                         modifier = Modifier
-                            .size(56.dp)
+                            .size(64.dp)
                             .clip(CircleShape)
-                            .background(Color.Gray),
-                        contentAlignment = Alignment.Center
+                            .background(Color.LightGray)
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Settings,
-                            contentDescription = "Perfil",
-                            tint = Color.White
-                        )
+                        Icon(Icons.Default.Person, contentDescription = null, tint = Color.White, modifier = Modifier.align(Alignment.Center))
                     }
                 }
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(Modifier.height(24.dp))
 
-            Text(
-                "Últimas actividades registradas",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = Color.Black
-            )
+            // Grupos existentes
+            Text("Grupos existentes", fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
+            Spacer(Modifier.height(8.dp))
+            grupos.forEach {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(paleCard, RoundedCornerShape(12.dp))
+                        .padding(12.dp)
+                        .padding(bottom = 8.dp)
+                ) {
+                    Column {
+                        Text(it.nombre, fontWeight = FontWeight.Medium)
+                        Spacer(Modifier.height(8.dp))
+                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            listOf("Alumnos", "Padres", "Docente").forEach { label ->
+                                Button(
+                                    onClick = {},
+                                    shape = RoundedCornerShape(50),
+                                    colors = ButtonDefaults.buttonColors(containerColor = buttonColor),
+                                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp)
+                                ) {
+                                    Text(label, fontSize = 12.sp, color = Color.White)
+                                }
+                            }
+                        }
+                    }
+                }
+                Spacer(Modifier.height(8.dp))
+            }
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Row(
-                modifier = Modifier.horizontalScroll(rememberScrollState())
-            ) {
-                actividades.forEach { actividad ->
+            // Alumnos registrados
+            Spacer(Modifier.height(16.dp))
+            Text("Alumnos registrados", fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
+            Spacer(Modifier.height(8.dp))
+            grupos.take(3).forEach {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(paleCard, RoundedCornerShape(12.dp))
+                        .padding(horizontal = 12.dp, vertical = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(it.nombre)
                     Button(
-                        onClick = { /* Navegar a detalle */ },
-                        modifier = Modifier
-                            .width(200.dp)
-                            .padding(end = 12.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xAA4B4B4B))
+                        onClick = {},
+                        shape = RoundedCornerShape(50),
+                        colors = ButtonDefaults.buttonColors(containerColor = buttonColor)
                     ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier.padding(8.dp)
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(80.dp)
-                                    .background(Color.Gray, RoundedCornerShape(8.dp))
-                            )
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(actividad.titulo, color = Color.White)
-                            Text(actividad.hora, color = Color.LightGray, fontSize = 12.sp)
-                        }
+                        Text("Asignar encargado", fontSize = 12.sp, color = Color.White)
                     }
                 }
+                Spacer(Modifier.height(8.dp))
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
-
-            Text(
-                "Tus grupos",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = Color.Black
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Row(
-                modifier = Modifier.horizontalScroll(rememberScrollState())
-            ) {
-                grupos.forEach { grupo ->
-                    Column(
-                        modifier = Modifier
-                            .width(200.dp)
-                            .padding(end = 12.dp)
-                            .background(PaleCardColor, RoundedCornerShape(12.dp))
-                            .padding(16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
+            // Padres registrados
+            Spacer(Modifier.height(16.dp))
+            Text("Padres registrados", fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
+            Spacer(Modifier.height(8.dp))
+            grupos.take(3).forEach {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(paleCard, RoundedCornerShape(12.dp))
+                        .padding(horizontal = 12.dp, vertical = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(it.nombre)
+                    Button(
+                        onClick = {},
+                        shape = RoundedCornerShape(50),
+                        colors = ButtonDefaults.buttonColors(containerColor = buttonColor)
                     ) {
-                        Text(
-                            grupo.nombre,
-                            color = Color.Black,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-
-                        Spacer(modifier = Modifier.height(12.dp))
-
-                        Button(
-                            onClick = { /* Ver estudiantes */ },
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = OrangeButtonColor,
-                                contentColor = Color.White
-                            ),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(40.dp)
-                        ) {
-                            Text("Ver estudiantes", fontSize = 13.sp)
-                        }
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        Button(
-                            onClick = { /* Ver encargados */ },
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = OrangeButtonColor,
-                                contentColor = Color.White
-                            ),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(40.dp)
-                        ) {
-                            Text("Ver encargados", fontSize = 13.sp)
-                        }
+                        Text("Asignar hijo", fontSize = 12.sp, color = Color.White)
                     }
                 }
+                Spacer(Modifier.height(8.dp))
             }
         }
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showSystemUi = true)
 @Composable
 fun AdminHomeScreenPreview() {
     BAPPTheme {
         AdminHomeScreen()
-
     }
 }
