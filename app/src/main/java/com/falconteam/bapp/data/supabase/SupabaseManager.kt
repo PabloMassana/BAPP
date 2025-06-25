@@ -1,22 +1,15 @@
 package com.falconteam.bapp.data.supabase
 
 import com.falconteam.bapp.data.entity.UserEntity
-import com.falconteam.bapp.data.models.Bitacora
-import com.falconteam.bapp.data.models.Evidencia
-import com.falconteam.bapp.data.models.Indicador
-import com.falconteam.bapp.data.models.Mensaje
-import com.falconteam.bapp.data.models.Notificacion
+import com.falconteam.bapp.data.models.*
+
 import io.github.jan.supabase.auth.user.UserInfo
 
 interface SupabaseManager {
     fun getSessionTokenOrNull(): String?
 
     suspend fun loginSupabase(emailUser: String, passwordUser: String): String?
-    suspend fun signUpUserSupabase(
-        emailUser: String,
-        passwordUser: String,
-        userName: String
-    ): UserInfo?
+    suspend fun signUpUserSupabase(emailUser: String, passwordUser: String, userName: String): UserInfo?
 
     suspend fun cerrarSesion()
     suspend fun insertarUsuario(usuario: UserEntity): UserEntity
@@ -39,4 +32,8 @@ interface SupabaseManager {
     suspend fun marcarNotificacionComoLeida(notificacionId: String)
 
     suspend fun actualizarRolUsuario(userId: String, nuevoRol: String)
+
+    suspend fun getAlumnoActual(): Alumno
+    suspend fun getActividades(alumnoId: String): List<Actividad>
+    suspend fun getUltimoReporte(alumnoId: String): Reporte?
 }

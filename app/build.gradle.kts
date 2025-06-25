@@ -86,4 +86,6 @@ dependencies {
     //Data Store
     implementation(libs.androidx.datastore.core)
     implementation(libs.androidx.datastore.preferences)
+
+    implementation(libs.coil.compose)
 }

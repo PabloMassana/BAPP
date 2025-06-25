@@ -1,11 +1,14 @@
 package com.falconteam.bapp.data.supabase
 
 import com.falconteam.bapp.data.entity.UserEntity
+import com.falconteam.bapp.data.models.Actividad
+import com.falconteam.bapp.data.models.Alumno
 import com.falconteam.bapp.data.models.Bitacora
 import com.falconteam.bapp.data.models.Evidencia
 import com.falconteam.bapp.data.models.Indicador
 import com.falconteam.bapp.data.models.Mensaje
 import com.falconteam.bapp.data.models.Notificacion
+import com.falconteam.bapp.data.models.Reporte
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.builtin.Email
@@ -150,5 +153,42 @@ class SupabaseManagerImpl(
             ) {
                 filter { eq("id", userId) }
             }
+    }
+
+    override suspend fun getAlumnoActual(): Alumno {
+        val userId = supabaseClient.auth.currentUserOrNull()?.id
+            ?: throw IllegalStateException("Usuario no autenticado")
+
+        return supabaseClient.from("alumnos")
+            .select {
+                filter {
+                    eq("user_id", userId)
+                }
+            }
+            .decodeSingle()
+    }
+
+    override suspend fun getActividades(alumnoId: String): List<Actividad> {
+        return supabaseClient.from("actividades")
+            .select {
+                filter {
+                    eq("alumno_id", alumnoId)
+                }
+                order("fecha", Order.DESCENDING)
+            }
+            .decodeList()
+    }
+
+    override suspend fun getUltimoReporte(alumnoId: String): Reporte? {
+        return supabaseClient.from("reportes")
+            .select {
+                filter {
+                    eq("alumno_id", alumnoId)
+                }
+                order("fecha", Order.DESCENDING)
+                limit(1)
+            }
+            .decodeList<Reporte>()
+            .firstOrNull()
     }
 }

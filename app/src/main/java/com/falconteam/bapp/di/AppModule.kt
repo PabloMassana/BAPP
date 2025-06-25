@@ -8,6 +8,9 @@ import com.falconteam.bapp.data.repository.MainRepository
 import com.falconteam.bapp.data.repository.MainRepositoryImpl
 import com.falconteam.bapp.data.supabase.SupabaseManager
 import com.falconteam.bapp.data.supabase.SupabaseManagerImpl
+import com.falconteam.bapp.domain.usecases.alumno.ObtenerActividadesUseCase
+import com.falconteam.bapp.domain.usecases.alumno.ObtenerAlumnoUseCase
+import com.falconteam.bapp.domain.usecases.alumno.ObtenerUltimoReporteUseCase
 import com.falconteam.bapp.domain.usecases.auth.LoginUseCase
 import com.falconteam.bapp.domain.usecases.auth.ObtenerRolUsuarioUseCase
 import com.falconteam.bapp.domain.usecases.auth.SignUpUseCase
@@ -27,6 +30,7 @@ import com.falconteam.bapp.ui.auth.login.LoginViewModel
 import com.falconteam.bapp.ui.auth.signup.SignUpViewModel
 import com.falconteam.bapp.ui.main.chat.ChatViewModel
 import com.falconteam.bapp.ui.main.evidencias.GaleriaViewModel
+import com.falconteam.bapp.ui.main.homeparent.HomeParentViewModel
 import com.falconteam.bapp.ui.main.indicadores.IndicadoresViewModel
 import com.falconteam.bapp.ui.main.notifications.NotificacionViewModel
 import com.falconteam.bapp.ui.main.perfil.PerfilViewModel
@@ -100,6 +104,11 @@ val appModule = module {
     factoryOf(::CerrarSesionUseCase)
     factoryOf(::ObtenerRolUsuarioUseCase)
 
+    // HomeParent
+    factoryOf(::ObtenerAlumnoUseCase)
+    factoryOf(::ObtenerActividadesUseCase)
+    factoryOf(::ObtenerUltimoReporteUseCase)
+
     // ViewModels
     viewModelOf(::LoginViewModel)
     viewModelOf(::SignUpViewModel)
@@ -109,4 +118,5 @@ val appModule = module {
     viewModelOf(::NotificacionViewModel)
     viewModelOf(::PerfilViewModel)
     viewModelOf(::BitacoraViewModel)
+    viewModelOf(::HomeParentViewModel)
 }

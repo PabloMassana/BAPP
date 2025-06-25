@@ -24,13 +24,17 @@ fun AppNavigation(navController: NavHostController) {
                 navController.navigate(NavigationRoutes.Login)
             }
         }
-        composable<NavigationRoutes.Home> { HomeParentScreen() }
-        composable<NavigationRoutes.Bitacora> { BitacoraScreen() }
-//        composable<NavigationRoutes.Chat> { ChatScreen() }
-//        composable<NavigationRoutes.Gallery> { GalleryScreen() }
-//        composable<NavigationRoutes.Indicadores> { IndicadoresScreen() }
-        composable<NavigationRoutes.Profile> { ProfileScreen() }
-//        composable<NavigationRoutes.Notifications> { NotificationsScreen() }
-        composable<NavigationRoutes.RolSelect> { RolSelectScreen() }
+        composable<NavigationRoutes.Home> {
+            HomeParentScreen()
+        }
+        composable<NavigationRoutes.Bitacora> {
+            BitacoraScreen()
+        }
+        composable<NavigationRoutes.Profile> {
+            ProfileScreen()
+        }
+        composable<NavigationRoutes.RolSelect> {
+            RolSelectScreen()
+        }
     }
 }

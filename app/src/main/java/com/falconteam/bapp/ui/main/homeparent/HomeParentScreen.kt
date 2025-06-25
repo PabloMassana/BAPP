@@ -1,36 +1,63 @@
 package com.falconteam.bapp.ui.main.homeparent
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.falconteam.bapp.R
 import com.falconteam.bapp.data.models.Actividad
+import com.falconteam.bapp.data.models.Alumno
 import com.falconteam.bapp.data.models.Reporte
 import com.falconteam.bapp.ui.theme.BAPPTheme
-import com.falconteam.bapp.R
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun HomeParentScreen(
+    viewModel: HomeParentViewModel = koinViewModel()
+) {
+    val uiState by viewModel.uiState.collectAsState()
+
+    when {
+        uiState.isLoading -> {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator()
+            }
+        }
+
+        uiState.error != null -> {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text(text = "Error: ${uiState.error}")
+            }
+        }
+
+        uiState.alumno != null -> {
+            HomeParentContent(
+                alumno = uiState.alumno!!,
+                actividades = uiState.actividades,
+                ultimoReporte = uiState.ultimoReporte
+            )
+        }
+    }
+}
+
+@Composable
+fun HomeParentContent(
+    alumno: Alumno,
     actividades: List<Actividad> = emptyList(),
     ultimoReporte: Reporte? = null,
     modifier: Modifier = Modifier
@@ -38,49 +65,62 @@ fun HomeParentScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
+            .background(
+                Brush.verticalGradient(
+                    colors = listOf(Color(0xFFFFA07A), Color(0xFFFFFBF9))
+                )
+            )
             .padding(16.dp)
-            .background(Color.White)
     ) {
+        // Bienvenida
         Card(
-            shape = RoundedCornerShape(20.dp),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFFFFE0D2)),
-            modifier = Modifier.fillMaxWidth()
+            shape = RoundedCornerShape(32.dp),
+            colors = CardDefaults.cardColors(containerColor = Color(0xFFFFD3BD)),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp)
         ) {
             Column(
-                modifier = Modifier.padding(16.dp),
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text("¡Bienvenido!, encargado de", fontSize = 14.sp)
-                Text("Juanito Diaz", fontWeight = FontWeight.Bold, fontSize = 20.sp)
-                Row {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_user),
-                        contentDescription = null,
+                Text(alumno.nombre, fontWeight = FontWeight.Bold, fontSize = 20.sp)
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Image(
+                        painter = painterResource(id = R.drawable.parent),
+                        contentDescription = "Encargado",
                         modifier = Modifier
                             .size(40.dp)
-                            .padding(end = 4.dp)
+                            .clip(CircleShape)
                     )
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_user),
-                        contentDescription = null,
-                        modifier = Modifier.size(40.dp)
+                    Image(
+                        painter = painterResource(id = R.drawable.hijo),
+                        contentDescription = "Niño",
+                        modifier = Modifier
+                            .size(40.dp)
+                            .clip(CircleShape)
                     )
                 }
             }
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
-
-        // Actividades del día
-        Text("Actividades del día", fontWeight = FontWeight.SemiBold)
+        // Actividades
+        Text("Actividades del día", fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
         Spacer(modifier = Modifier.height(8.dp))
 
         if (actividades.isEmpty()) {
             Text("No hay actividades programadas", fontSize = 13.sp, color = Color.Gray)
         } else {
-            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                actividades.forEach {
-                    ActivityCard(it.titulo, it.hora, it.iconoRes)
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                contentPadding = PaddingValues(horizontal = 4.dp)
+            ) {
+                items(actividades.take(5)) { actividad ->
+                    ActividadMiniCard(actividad = actividad)
                 }
             }
         }
@@ -88,22 +128,28 @@ fun HomeParentScreen(
         Spacer(modifier = Modifier.height(20.dp))
 
         // Último reporte
-        Text("Último reporte: ${ultimoReporte?.fecha ?: "Sin reporte disponible"}", fontWeight = FontWeight.Medium)
+        Text(
+            text = "Último reporte: ${ultimoReporte?.fecha ?: "Sin reporte disponible"}",
+            fontWeight = FontWeight.Medium,
+            fontSize = 14.sp
+        )
         Spacer(modifier = Modifier.height(12.dp))
 
         if (ultimoReporte != null) {
-            ReportCard(ultimoReporte)
+            ReportCard(reporte = ultimoReporte)
         } else {
             Text("No se ha registrado un reporte reciente", fontSize = 13.sp, color = Color.Gray)
         }
     }
 }
 
-
 @Preview
 @Composable
-private fun HomeScreenPreview() {
+fun PreviewHomeParentScreen() {
+    val alumno = Alumno(
+        nombre = "Juanito Diaz",
+    )
     BAPPTheme {
-        HomeParentScreen()
+        HomeParentContent(alumno = alumno)
     }
 }
