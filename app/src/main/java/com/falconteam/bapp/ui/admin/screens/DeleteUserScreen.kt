@@ -143,11 +143,11 @@ fun DeleteUserScreen(
                                     painter = painterResource(id = user.avatarRes),
                                     contentDescription = null,
                                     modifier = Modifier
-                                        .size(40.dp)
+                                        .size(32.dp)
                                         .clip(CircleShape)
                                 )
-                                Spacer(Modifier.width(12.dp))
-                                Text(user.name, fontSize = 16.sp)
+                                Spacer(Modifier.width(10.dp))
+                                Text(user.name, fontSize = 14.sp)
                             }
                             IconButton(onClick = { viewModel.deleteUser(user) }) {
                                 Icon(
