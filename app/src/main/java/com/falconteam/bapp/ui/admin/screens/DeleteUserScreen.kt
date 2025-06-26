@@ -28,7 +28,8 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun DeleteUserScreen(
     viewModel: DeleteUserViewModel = koinViewModel(),
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
+    onNavigateToApproveTeacher: () -> Unit
 ) {
     val background = Brush.verticalGradient(listOf(Color(0xFFFFA48B), Color.White))
     val paleCard = Color(0xFFFFD6C9)
@@ -48,7 +49,7 @@ fun DeleteUserScreen(
             NavigationBar(containerColor = Color.White) {
                 NavigationBarItem(
                     selected = false,
-                    onClick = onNavigateBack, // Navigate back to AdminHomeScreen
+                    onClick = onNavigateBack,
                     icon = { Icon(Icons.Default.Add, contentDescription = "Agregar") },
                     label = { Text("Agregar") }
                 )
@@ -57,9 +58,12 @@ fun DeleteUserScreen(
                     Icon(Icons.Default.Delete, contentDescription = "Borrar")
                 }, label = { Text("Borrar") })
 
-                NavigationBarItem(selected = false, onClick = { /*TODO*/ }, icon = {
-                    Icon(Icons.Default.Person, contentDescription = "Docentes")
-                }, label = { Text("Docentes") })
+                NavigationBarItem(
+                    selected = false,
+                    onClick = onNavigateToApproveTeacher,
+                    icon = { Icon(Icons.Default.Person, contentDescription = "Docentes") },
+                    label = { Text("Docentes") }
+                )
             }
         },
         containerColor = Color.Transparent

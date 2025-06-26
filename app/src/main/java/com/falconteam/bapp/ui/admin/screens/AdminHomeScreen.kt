@@ -47,15 +47,17 @@
                     NavigationBarItem(selected = true, onClick = { }, icon = {
                         Icon(Icons.Default.Add, contentDescription = "Agregar")
                     }, label = { Text("Agregar") })
+
                     NavigationBarItem(
                         selected = false,
                         onClick = onNavigateToDelete,
                         icon = { Icon(Icons.Default.Delete, contentDescription = "Borrar") },
                         label = { Text("Borrar") }
                     )
+
                     NavigationBarItem(
                         selected = false,
-                        onClick = onNavigateToApproveTeacher, // ✅ Use callback
+                        onClick = onNavigateToApproveTeacher,
                         icon = { Icon(Icons.Default.Person, contentDescription = "Docentes") },
                         label = { Text("Docentes") }
                     )

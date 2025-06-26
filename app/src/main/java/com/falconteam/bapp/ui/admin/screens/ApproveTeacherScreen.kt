@@ -27,7 +27,9 @@ import com.falconteam.bapp.R
 
 @Composable
 fun ApproveTeacherScreen(
-    viewModel: ApproveTeachersViewModel = viewModel()
+    viewModel: ApproveTeachersViewModel = viewModel(),
+    onNavigateBack: () -> Unit,
+    onNavigateToDelete: () -> Unit
 ) {
     val state by viewModel.state.collectAsState()
     val gradient = Brush.verticalGradient(listOf(Color(0xFFFFA48B), Color.White))
@@ -44,24 +46,21 @@ fun ApproveTeacherScreen(
             NavigationBar(containerColor = Color.White) {
                 NavigationBarItem(
                     selected = false,
-                    onClick = { },
+                    onClick = onNavigateBack,
                     icon = { Icon(Icons.Default.Add, contentDescription = "Agregar") },
                     label = { Text("Agregar") }
                 )
 
                 NavigationBarItem(
                     selected = false,
-                    onClick = { },
+                    onClick = onNavigateToDelete,
                     icon = { Icon(Icons.Default.Delete, contentDescription = "Borrar") },
                     label = { Text("Borrar") }
                 )
 
-                NavigationBarItem(
-                    selected = true,
-                    onClick = { },
-                    icon = { Icon(Icons.Default.Person, contentDescription = "Docentes") },
-                    label = { Text("Docentes") }
-                )
+                NavigationBarItem(selected = true, onClick = { }, icon = {
+                    Icon(Icons.Default.Person, contentDescription = "Docentes")
+                }, label = { Text("Docentes") })
             }
         },
         containerColor = Color.Transparent
