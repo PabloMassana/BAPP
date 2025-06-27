@@ -1,6 +1,5 @@
 package com.falconteam.bapp.ui.admin.viewmodel
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.falconteam.bapp.R
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,14 +12,12 @@ data class User(
     val group: String
 )
 
-class DeleteUserViewModel(
-    private val savedStateHandle: SavedStateHandle
-) : ViewModel() {
+class DeleteUserViewModel : ViewModel() {
 
-    val groups = listOf("Kinder 4 - Sección A", "Kinder 4 - Sección B")
+    val groups = listOf("Kinder 4 - Sección A", "Kinder 4 - Sección B", "Kinder 4 - Sección C")
 
     private val _users = MutableStateFlow(
-        savedStateHandle.get<List<User>>("users") ?: listOf(
+        listOf(
             // Sección A
             User("Juanito Alejandro López", R.drawable.avatar1, "Kinder 4 - Sección A"),
             User("Sofía Martínez López", R.drawable.avatar2, "Kinder 4 - Sección A"),
@@ -36,10 +33,6 @@ class DeleteUserViewModel(
     val users: StateFlow<List<User>> = _users
 
     fun deleteUser(user: User) {
-        _users.update { current ->
-            val updated = current.toMutableList().apply { remove(user) }
-            savedStateHandle["users"] = updated
-            updated
-        }
+        _users.update { currentList -> currentList.filterNot { it == user } }
     }
 }
