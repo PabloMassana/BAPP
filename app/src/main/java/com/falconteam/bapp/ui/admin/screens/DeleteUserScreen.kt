@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.falconteam.bapp.ui.admin.viewmodel.DeleteUserViewModel
 import com.falconteam.bapp.ui.admin.viewmodel.User
+import kotlinx.coroutines.flow.filter
 import org.koin.compose.viewmodel.koinViewModel
 
 @ExperimentalMaterial3Api
@@ -38,9 +39,10 @@ fun DeleteUserScreen(
     var selectedGroup by remember { mutableStateOf(viewModel.groups.first()) }
     var searchText by remember { mutableStateOf("") }
 
-    val filteredUsers = remember(searchText) {
-        viewModel.users.filter {
-            it.name.contains(searchText, ignoreCase = true)
+    val allUsers by viewModel.users.collectAsState()
+    val filteredUsers = remember(allUsers, searchText, selectedGroup) {
+        allUsers.filter {
+            it.group == selectedGroup && it.name.contains(searchText, ignoreCase = true)
         }
     }
 
@@ -78,17 +80,19 @@ fun DeleteUserScreen(
             Spacer(Modifier.height(24.dp))
 
             // Dropdown
+            var expanded by remember { mutableStateOf(false) }
+
             ExposedDropdownMenuBox(
-                expanded = false,
-                onExpandedChange = {},
+                expanded = expanded,
+                onExpandedChange = { expanded = !expanded },
             ) {
                 TextField(
                     value = selectedGroup,
                     onValueChange = {},
                     readOnly = true,
-                    label = null,
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = false) },
+                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                     modifier = Modifier
+                        .menuAnchor()
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(50))
                         .background(paleCard),
@@ -100,6 +104,21 @@ fun DeleteUserScreen(
                         unfocusedIndicatorColor = Color.Transparent
                     )
                 )
+
+                ExposedDropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    viewModel.groups.forEach { group ->
+                        DropdownMenuItem(
+                            text = { Text(group) },
+                            onClick = {
+                                selectedGroup = group
+                                expanded = false
+                            }
+                        )
+                    }
+                }
             }
 
             Spacer(Modifier.height(12.dp))
