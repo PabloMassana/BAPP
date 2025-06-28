@@ -45,7 +45,7 @@ fun ChildParentScreen(
             .fillMaxSize()
             .background(
                 Brush.verticalGradient(
-                    colors = listOf(Color(0xFFFFA07A), Color(0xFFFFFBF9))
+                    colors = listOf(Color(0xFFFFA07A), Color.White)
                 )
             )
             .padding(16.dp)
