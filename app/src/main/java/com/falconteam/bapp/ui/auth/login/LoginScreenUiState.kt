@@ -6,6 +6,7 @@ import com.falconteam.bapp.utils.Constants.EMPTY_STRING
 data class LoginScreenUiState(
     val email: String = EMPTY_STRING,
     val password: String = EMPTY_STRING,
+    val loading: Boolean = false,
     val loginSuccessful: Boolean = false,
     val userRole: UserRole? = null,
     val errorMessage: String? = null

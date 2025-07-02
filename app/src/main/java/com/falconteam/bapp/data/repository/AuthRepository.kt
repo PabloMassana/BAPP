@@ -1,5 +1,6 @@
 package com.falconteam.bapp.data.repository
 
+import com.falconteam.bapp.data.entity.ParentEntity
 import com.falconteam.bapp.data.entity.UserEntity
 import com.falconteam.bapp.data.local.DataStoreHelper
 import com.falconteam.bapp.data.local.DataStoreHelper.Companion.USER_ID
@@ -14,6 +15,7 @@ import kotlinx.coroutines.withContext
 interface AuthRepository {
     suspend fun login(email: String, password: String): Result<UserEntity>
     suspend fun signUp(email: String, password: String, username: String): Result<UserInfo?>
+    suspend fun logout(): Result<Boolean>
     suspend fun saveUser(userEntity: UserEntity): UserEntity?
     suspend fun getUser(idUsuario: String): Result<UserEntity>
 }
@@ -59,14 +61,32 @@ class AuthRepositoryImpl(
                 email = email,
                 rol = Rol.PADRE.name
             )
+            val parentEntity = ParentEntity(
+                name = username,
+                lastname = "",
+                userId = userInfo?.id.orEmpty()
+            )
+
             val savedUser = saveUser(userEntity)
 
             if (savedUser != null) {
+                supabaseManager.insertarPadre(parentEntity)
                 dataStoreHelper.putValue(USER_ID, savedUser.id.orEmpty())
                 dataStoreHelper.putValue(USER_ROLE, savedUser.rol)
             }
 
             Result.success(userInfo)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun logout(): Result<Boolean> = withContext(Dispatchers.IO) {
+        try {
+            supabaseManager.cerrarSesion()
+            dataStoreHelper.clearAll()
+            Result.success(true)
         } catch (e: Exception) {
             e.printStackTrace()
             Result.failure(e)

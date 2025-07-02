@@ -1,4 +1,4 @@
-package com.falconteam.bapp.data.components
+package com.falconteam.bapp.ui.main.childparent
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape

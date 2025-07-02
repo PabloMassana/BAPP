@@ -16,18 +16,17 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun ChatScreen(
-    conversacionId: String,
-    emisorId: String,
     viewModel: ChatViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
     var messageText by remember { mutableStateOf(TextFieldValue("")) }
     val coroutineScope = rememberCoroutineScope()
 
     // Cargar mensajes cuando cambia el ID de la conversación
-    LaunchedEffect(conversacionId) {
+    /*LaunchedEffect(conversacionId) {
         viewModel.loadMessages(conversacionId)
-    }
+    }*/
 
     Column(
         modifier = Modifier
@@ -47,7 +46,7 @@ fun ChatScreen(
                 contentPadding = PaddingValues(vertical = 8.dp)
             ) {
                 items(uiState.messages.reversed()) { message ->
-                    MessageItem(message = message, isOwnMessage = message.emisorId == emisorId)
+                    MessageItem(message = message, isOwnMessage = message.emisorId == "0") // TODO: Cambia "0" por el ID del usuario actual)
                 }
             }
 
@@ -71,8 +70,8 @@ fun ChatScreen(
                         if (messageText.text.isNotBlank()) {
                             val mensaje = Mensaje(
                                 id = "",
-                                conversacionId = conversacionId,
-                                emisorId = emisorId,
+                                conversacionId = "", // TODO: Cambia esto por el ID de la conversación actual
+                                emisorId = "", // TODO: Cambia esto por el ID del usuario actual
                                 contenido = messageText.text,
                                 timestamp = Clock.System.now().toString()
                             )

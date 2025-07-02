@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Lock
@@ -38,6 +39,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -59,9 +61,9 @@ fun LoginScreen(
 
     LaunchedEffect(uiState.userRole) {
         when (uiState.userRole) {
-            UserRole.ADMIN -> onNavigate(NavigationRoutes.HomeAdmin)
-            UserRole.TEACHER -> onNavigate(NavigationRoutes.HomeTeacher)
-            UserRole.PARENT -> onNavigate(NavigationRoutes.Home)
+            UserRole.ADMIN -> onNavigate(NavigationRoutes.HomeAdminDestination.HomeAdminNavGraph)
+            UserRole.TEACHER -> onNavigate(NavigationRoutes.HomeTeacherDestination.HomeTeacher)
+            UserRole.PARENT -> onNavigate(NavigationRoutes.HomeParentDestination.HomeParentNavGraph)
             null -> Unit
         }
     }
@@ -107,7 +109,7 @@ fun LoginScreenContent(
 
             // Logo
             Image(
-                painter = painterResource(id =  R.mipmap.logo_foreground), // Cambia por tu recurso real
+                painter = painterResource(id = R.mipmap.logo_foreground), // Cambia por tu recurso real
                 contentDescription = "Icono de login",
                 modifier = Modifier.size(120.dp)
             )
@@ -134,7 +136,8 @@ fun LoginScreenContent(
                     OutlinedTextField(
                         value = uiState.email,
                         onValueChange = onEmailChange,
-                        label = { Text("Username") },
+                        label = { Text("Correo electronico") },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                         leadingIcon = {
                             Icon(Icons.Default.Person, contentDescription = null)
                         },
@@ -148,7 +151,7 @@ fun LoginScreenContent(
                     OutlinedTextField(
                         value = uiState.password,
                         onValueChange = onPasswordChange,
-                        label = { Text("Password") },
+                        label = { Text("Contraseña") },
                         leadingIcon = {
                             Icon(Icons.Default.Lock, contentDescription = null)
                         },
@@ -191,7 +194,9 @@ fun LoginScreenContent(
                                 append("Registrarse")
                             }
                         },
-                        modifier = Modifier.padding(top = 8.dp).clickable { onNavigateSignUp() }
+                        modifier = Modifier
+                            .padding(top = 8.dp)
+                            .clickable { onNavigateSignUp() }
                     )
                 }
             }

@@ -1,6 +1,5 @@
 package com.falconteam.bapp.ui.main.homeparent
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -8,57 +7,57 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
-import com.falconteam.bapp.data.models.Notificacion
-import com.falconteam.bapp.ui.theme.BAPPTheme
+import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import com.falconteam.bapp.ui.components.appbar.BappNavigationBar
+import com.falconteam.bapp.ui.components.appbar.BappTopBar
+import com.falconteam.bapp.ui.navigation.graph.HomeParentNavGraph
 
 @Composable
-fun ParentBaseScreen(modifier: Modifier = Modifier) {
+fun ParentBaseScreen(
+    rootNavController: NavHostController,
+) {
+    ParentBaseScreenContent(rootNavController = rootNavController)
+}
+
+@Composable
+fun ParentBaseScreenContent(modifier: Modifier = Modifier, rootNavController: NavHostController) {
+    val navController = rememberNavController()
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
+
     var selectedItem by remember { mutableStateOf(BottomParentNavItem.HOME) }
 
     Scaffold(
         topBar = {
-            ParentTopBar(notifications = emptyList())
+            BappTopBar(title = selectedItem.label)
         },
         bottomBar = {
-            NavigationBar {
-                BottomParentNavItem.entries.forEach { item ->
-                    NavigationBarItem(
-                        selected = selectedItem == item,
-                        onClick = { selectedItem = item },
-                        icon = {
-                            Icon(
-                                painter = painterResource(id = item.icon),
-                                contentDescription = item.label
-                            )
-                        },
-                        label = { Text(item.label) },
-                        colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = Color(0xFFFFA07A),
-                            unselectedIconColor = Color(0xFF484C52),
-                            selectedTextColor = Color(0xFFFFA07A),
-                            unselectedTextColor = Color(0xFF484C52),
-                            indicatorColor = Color.Transparent
-                        )
-                    )
-                }
+            BappNavigationBar(
+                navItems = BottomParentNavItem.entries,
+                currentDestination = currentDestination,
+                navController = navController
+            ) {
+                selectedItem = it
             }
-        },
-        modifier = modifier
+        }
     ) { pv ->
-        Box(modifier = Modifier.padding(pv))
-        // content
-    }
-}
-
-@Preview
-@Composable
-private fun ParentBaseScreenPreview() {
-    BAPPTheme {
-        ParentBaseScreen()
+        HomeParentNavGraph(
+            modifier = modifier.padding(pv),
+            rootNavController = rootNavController,
+            navController = navController
+        )
     }
 }

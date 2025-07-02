@@ -1,20 +1,25 @@
 package com.falconteam.bapp.data.supabase
 
+import com.falconteam.bapp.data.entity.ParentEntity
 import com.falconteam.bapp.data.entity.UserEntity
 import com.falconteam.bapp.data.models.*
 
 import io.github.jan.supabase.auth.user.UserInfo
 
 interface SupabaseManager {
-    fun getSessionTokenOrNull(): String?
 
+    // Usuarios
+    fun getSessionTokenOrNull(): String?
     suspend fun loginSupabase(emailUser: String, passwordUser: String): String?
     suspend fun signUpUserSupabase(emailUser: String, passwordUser: String, userName: String): UserInfo?
-
     suspend fun cerrarSesion()
     suspend fun insertarUsuario(usuario: UserEntity): UserEntity
     suspend fun obtenerUsuarioPorId(idUsuario: String): UserEntity
     suspend fun obtenerUsuarioPorEmail(email: String): UserEntity?
+
+    // padres
+    suspend fun insertarPadre(padre: ParentEntity): ParentEntity?
+    suspend fun obtenerListadoPadres(): List<ParentEntity>
 
     suspend fun insertarMensajeChat(mensaje: Mensaje)
     suspend fun obtenerMensajesChat(conversacionId: String): List<Mensaje>

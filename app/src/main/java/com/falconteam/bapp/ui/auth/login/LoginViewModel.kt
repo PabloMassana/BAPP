@@ -27,6 +27,8 @@ class LoginViewModel(
 
     fun loginAction() {
         viewModelScope.launch {
+            _uiState.update { it.copy(loading = true) }
+
             val result = loginUseCase(
                 email = _uiState.value.email,
                 password = _uiState.value.password
@@ -36,11 +38,12 @@ class LoginViewModel(
                 _uiState.update {
                     it.copy(
                         loginSuccessful = true,
-                        userRole = UserRole.getRoleFromString(user.rol)
+                        userRole = UserRole.getRoleFromString(user.rol),
+                        loading = false
                     )
                 }
             }.onFailure { e ->
-                _uiState.update { it.copy(errorMessage = e.message) }
+                _uiState.update { it.copy(errorMessage = e.message, loading = false) }
             }
         }
     }

@@ -7,7 +7,7 @@ enum class UserRole {
 
     companion object {
         fun getRoleFromString(role: String): UserRole {
-            return when (role.lowercase()) {
+            return when (role) {
                 "ADMIN" -> ADMIN
                 "TEACHER" -> TEACHER
                 "PARENT" -> PARENT

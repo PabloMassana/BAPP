@@ -22,8 +22,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.falconteam.bapp.R
-import com.falconteam.bapp.data.components.TaskCard
 import com.falconteam.bapp.data.models.Alumno
 import com.falconteam.bapp.data.models.DetalleReporte
 import com.falconteam.bapp.data.models.Reporte
@@ -31,13 +31,20 @@ import com.falconteam.bapp.data.models.Task
 import com.falconteam.bapp.ui.main.homeparent.EmojiLine
 import com.falconteam.bapp.ui.main.homeparent.ReportRatingLine
 import com.falconteam.bapp.ui.theme.BAPPTheme
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun ChildParentScreen(
-    alumno: Alumno,
-    reportes: List<Reporte>,
-    tareasPendientes: List<Task>,
-    tareasCompletadas: List<Task>,
+fun MyChildrenScreen(
+    viewModel: ChildParentViewModel = koinViewModel()
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    ChildParentContent(uiState)
+}
+
+@Composable
+fun ChildParentContent(
+    uiState: ChildParentUiState,
     onTaskCheckedChange: (Task, Boolean) -> Unit = { _, _ -> }
 ) {
     Column(
@@ -71,13 +78,13 @@ fun ChildParentScreen(
                 )
                 Spacer(modifier = Modifier.width(12.dp))
                 Column {
-                    Text(alumno.nombre, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                    alumno.edad()?.let {
+                    Text(uiState.alumno.nombre, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                    uiState.alumno.edad()?.let {
                         Text("Edad: $it años", fontSize = 14.sp)
                     } ?: Text("Edad: N/D", fontSize = 14.sp)
 
-                    Text("Nacimiento: ${alumno.fechaNacimiento ?: "N/D"}", fontSize = 14.sp)
-                    Text("Nivel: Kinder    Grupo: ${alumno.idCurso}", fontSize = 14.sp)
+                    Text("Nacimiento: ${uiState.alumno.fechaNacimiento ?: "N/D"}", fontSize = 14.sp)
+                    Text("Nivel: Kinder Grupo: ${uiState.alumno.idCurso}", fontSize = 14.sp)
                 }
             }
         }
@@ -85,11 +92,11 @@ fun ChildParentScreen(
         // Reportes desplegables
         Text("Últimos reportes", fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
         Spacer(modifier = Modifier.height(8.dp))
-        if (reportes.isEmpty()) {
+        if (uiState.reportes.isEmpty()) {
             Text("No hay reportes recientes", fontSize = 13.sp, color = Color.Gray)
         } else {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                reportes.forEach { reporte ->
+                uiState.reportes.forEach { reporte ->
                     ExpandableReportCard(reporte)
                 }
             }
@@ -100,7 +107,7 @@ fun ChildParentScreen(
         // Tareas pendientes
         Text("Tareas para ti", fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
         Spacer(modifier = Modifier.height(8.dp))
-        tareasPendientes.forEach { task ->
+        uiState.tareasPendientes.forEach { task ->
             TaskCard(task = task, onCheckedChange = { isChecked ->
                 onTaskCheckedChange(task, isChecked)
             })
@@ -111,7 +118,7 @@ fun ChildParentScreen(
         // Tareas completadas
         Text("Tareas completadas", fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
         Spacer(modifier = Modifier.height(8.dp))
-        tareasCompletadas.forEach { task ->
+        uiState.tareasCompletadas.forEach { task ->
             TaskCard(task = task, enabled = false, checked = true)
         }
     }
@@ -197,11 +204,13 @@ fun ChildParentScreenPreview() {
     )
 
     BAPPTheme {
-        ChildParentScreen(
-            alumno = dummyAlumno,
-            reportes = reportes,
-            tareasPendientes = tareas,
-            tareasCompletadas = completadas
+        ChildParentContent(
+            uiState = ChildParentUiState(
+                alumno = dummyAlumno,
+                reportes = reportes,
+                tareasPendientes = tareas,
+                tareasCompletadas = completadas
+            )
         )
     }
 }

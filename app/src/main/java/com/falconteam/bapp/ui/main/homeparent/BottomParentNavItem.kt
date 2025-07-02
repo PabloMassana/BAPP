@@ -3,21 +3,22 @@ package com.falconteam.bapp.ui.main.homeparent
 import androidx.annotation.DrawableRes
 import com.falconteam.bapp.R
 import com.falconteam.bapp.ui.navigation.NavigationRoutes
+import com.falconteam.bapp.ui.navigation.navitems.BottomNavItem
 
 enum class BottomParentNavItem(
-    val label: String,
-    @DrawableRes val icon: Int,
-    val destination: NavigationRoutes
-) {
+    override val label: String,
+    @DrawableRes override val icon: Int,
+    override val destination: NavigationRoutes
+): BottomNavItem {
     HOME(
         label = "Inicio",
         icon = R.drawable.ic_home,
-        destination = NavigationRoutes.Home
+        destination = NavigationRoutes.HomeParentDestination.HomeParent
     ),
     CHILD(
         label = "Mi hijo",
         icon = R.drawable.ic_child,
-        destination = NavigationRoutes.MyChild
+        destination = NavigationRoutes.HomeParentDestination.MyChildren
     ),
     CHAT(
         label = "Mensajes",
@@ -27,7 +28,7 @@ enum class BottomParentNavItem(
     REPORT(
         label = "Reportes",
         icon = R.drawable.ic_report,
-        destination = NavigationRoutes.Reports
+        destination = NavigationRoutes.HomeParentDestination.ReportsParent
     ),
     PROFILE(
         label = "Perfil",

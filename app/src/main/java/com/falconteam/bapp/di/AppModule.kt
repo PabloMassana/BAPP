@@ -2,16 +2,20 @@ package com.falconteam.bapp.di
 
 import com.falconteam.bapp.data.local.DataStoreHelper
 import com.falconteam.bapp.data.local.createDataStore
+import com.falconteam.bapp.data.repository.AdminRepository
+import com.falconteam.bapp.data.repository.AdminRepositoryImpl
 import com.falconteam.bapp.data.repository.AuthRepository
 import com.falconteam.bapp.data.repository.AuthRepositoryImpl
 import com.falconteam.bapp.data.repository.MainRepository
 import com.falconteam.bapp.data.repository.MainRepositoryImpl
 import com.falconteam.bapp.data.supabase.SupabaseManager
 import com.falconteam.bapp.data.supabase.SupabaseManagerImpl
+import com.falconteam.bapp.domain.usecases.admin.ObtenerListadoPadresUseCase
 import com.falconteam.bapp.domain.usecases.alumno.ObtenerActividadesUseCase
 import com.falconteam.bapp.domain.usecases.alumno.ObtenerAlumnoUseCase
 import com.falconteam.bapp.domain.usecases.alumno.ObtenerUltimoReporteUseCase
 import com.falconteam.bapp.domain.usecases.auth.LoginUseCase
+import com.falconteam.bapp.domain.usecases.auth.LogoutUseCase
 import com.falconteam.bapp.domain.usecases.auth.ObtenerRolUsuarioUseCase
 import com.falconteam.bapp.domain.usecases.auth.SignUpUseCase
 import com.falconteam.bapp.domain.usecases.bitacora.AgregarBitacoraUseCase
@@ -29,7 +33,9 @@ import com.falconteam.bapp.domain.usecases.perfil.CerrarSesionUseCase
 import com.falconteam.bapp.ui.auth.login.LoginViewModel
 import com.falconteam.bapp.ui.auth.signup.SignUpViewModel
 import com.falconteam.bapp.ui.main.chat.ChatViewModel
+import com.falconteam.bapp.ui.main.childparent.ChildParentViewModel
 import com.falconteam.bapp.ui.main.evidencias.GaleriaViewModel
+import com.falconteam.bapp.ui.main.homeadmin.HomeAdminViewModel
 import com.falconteam.bapp.ui.main.homeparent.HomeParentViewModel
 import com.falconteam.bapp.ui.main.indicadores.IndicadoresViewModel
 import com.falconteam.bapp.ui.main.notifications.NotificacionViewModel
@@ -70,12 +76,20 @@ val appModule = module {
         )
     }
 
+    single<AdminRepository> {
+        AdminRepositoryImpl(
+            supabaseManager = get(),
+            dataStoreHelper = get()
+        )
+    }
+
     single<MainRepository> {
         MainRepositoryImpl(get())
     }
 
     // Use Cases - Autenticación
     factoryOf(::LoginUseCase)
+    factoryOf(::LogoutUseCase)
     factoryOf(::ObtenerRolUsuarioUseCase)
     factoryOf(::SignUpUseCase)
 
@@ -109,9 +123,13 @@ val appModule = module {
     factoryOf(::ObtenerActividadesUseCase)
     factoryOf(::ObtenerUltimoReporteUseCase)
 
+    // Admin
+    factoryOf(::ObtenerListadoPadresUseCase)
+
     // ViewModels
     viewModelOf(::LoginViewModel)
     viewModelOf(::SignUpViewModel)
+    viewModelOf(::ChildParentViewModel)
     viewModelOf(::ChatViewModel)
     viewModelOf(::GaleriaViewModel)
     viewModelOf(::IndicadoresViewModel)
@@ -119,4 +137,5 @@ val appModule = module {
     viewModelOf(::PerfilViewModel)
     viewModelOf(::BitacoraViewModel)
     viewModelOf(::HomeParentViewModel)
+    viewModelOf(::HomeAdminViewModel)
 }

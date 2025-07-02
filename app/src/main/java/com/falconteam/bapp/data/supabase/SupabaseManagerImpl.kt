@@ -1,5 +1,6 @@
 package com.falconteam.bapp.data.supabase
 
+import com.falconteam.bapp.data.entity.ParentEntity
 import com.falconteam.bapp.data.entity.UserEntity
 import com.falconteam.bapp.data.models.Actividad
 import com.falconteam.bapp.data.models.Alumno
@@ -70,6 +71,16 @@ class SupabaseManagerImpl(
                 eq("email", email)
             }
         }.decodeSingleOrNull<UserEntity>()
+
+    override suspend fun insertarPadre(padre: ParentEntity): ParentEntity? =
+        supabaseClient.from("padre").insert(padre) {
+            select()
+        }.decodeSingleOrNull<ParentEntity>()
+
+    override suspend fun obtenerListadoPadres(): List<ParentEntity> =
+        supabaseClient.from("padre").select {
+            order("id", Order.ASCENDING)
+        }.decodeList<ParentEntity>()
 
     override suspend fun insertarMensajeChat(mensaje: Mensaje) {
         supabaseClient.from("chat_messages").insert(mensaje)
