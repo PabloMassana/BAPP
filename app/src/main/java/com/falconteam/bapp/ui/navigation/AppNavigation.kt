@@ -9,6 +9,7 @@ import com.falconteam.bapp.ui.auth.signup.SignUpScreen
 import com.falconteam.bapp.ui.main.homeadmin.AdminBaseScreen
 import com.falconteam.bapp.ui.main.homeparent.HomeParentScreen
 import com.falconteam.bapp.ui.main.homeparent.ParentBaseScreen
+import com.falconteam.bapp.ui.main.hometeacher.TeacherBaseScreen
 import com.falconteam.bapp.ui.main.perfil.ProfileScreen
 import com.falconteam.bapp.ui.main.roles.RolSelectScreen
 import com.falconteam.bapp.ui.main.tasks.BitacoraScreen
@@ -25,6 +26,11 @@ fun AppNavigation(navController: NavHostController) {
             SignUpScreen {
                 navController.navigate(NavigationRoutes.Login)
             }
+        }
+        composable<NavigationRoutes.HomeTeacherDestination.HomeTeacherNavGraph> {
+            TeacherBaseScreen(
+                rootNavController = navController
+            )
         }
         composable<NavigationRoutes.HomeParentDestination.HomeParentNavGraph> {
             ParentBaseScreen(

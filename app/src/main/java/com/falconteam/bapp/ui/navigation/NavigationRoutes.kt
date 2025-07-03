@@ -43,10 +43,13 @@ sealed interface NavigationRoutes {
     @Serializable
     sealed class HomeTeacherDestination: NavigationRoutes {
         @Serializable
+        data object HomeTeacherNavGraph: HomeTeacherDestination()
+
+        @Serializable
         data object HomeTeacher: HomeTeacherDestination()
 
         @Serializable
-        data object MyStudents: HomeTeacherDestination()
+        data object ReportsTeacher: HomeTeacherDestination()
 
         @Serializable
         data object AddActivities: HomeTeacherDestination()

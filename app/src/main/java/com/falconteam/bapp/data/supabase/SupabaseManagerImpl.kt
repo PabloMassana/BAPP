@@ -1,8 +1,9 @@
 package com.falconteam.bapp.data.supabase
 
-import com.falconteam.bapp.data.entity.main.ParentEntity
-import com.falconteam.bapp.data.entity.main.TeacherEntity
-import com.falconteam.bapp.data.entity.main.UserEntity
+import com.falconteam.bapp.data.entity.ActividadEntity
+import com.falconteam.bapp.data.entity.ParentEntity
+import com.falconteam.bapp.data.entity.TeacherEntity
+import com.falconteam.bapp.data.entity.UserEntity
 import com.falconteam.bapp.data.models.Actividad
 import com.falconteam.bapp.data.models.Alumno
 import com.falconteam.bapp.data.models.Bitacora
@@ -48,7 +49,6 @@ class SupabaseManagerImpl(
             put("username", userName)
         }
     }
-
 
     override suspend fun cerrarSesion() {
         supabaseClient.auth.signOut()
@@ -225,7 +225,7 @@ class SupabaseManagerImpl(
             .decodeList()
     }
 
-    override suspend fun getActividadesPorMaestro(maestroId: String): List<Actividad> {
+    override suspend fun getActividadesPorMaestro(maestroId: String): List<ActividadEntity> {
         return supabaseClient.from("actividades")
             .select {
                 filter { eq("maestro_id", maestroId) }
@@ -234,14 +234,10 @@ class SupabaseManagerImpl(
             .decodeList()
     }
 
-    override suspend fun agregarActividad(actividad: Actividad, fileBytes: ByteArray): Actividad {
-        val bucket = supabaseClient.storage.from("actividades") // bucket llamado "actividades"
-        bucket.upload(actividad.imagenUrl, fileBytes) {
-            upsert = false
-        }
-
-        return supabaseClient.from("actividades").insert(actividad) {
+    override suspend fun upsertActividad(actividadEntity: ActividadEntity) {
+        supabaseClient.from("actividades").upsert(actividadEntity) {
             select()
-        }.decodeSingle()
+        }
     }
+
 }

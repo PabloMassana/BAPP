@@ -1,6 +1,6 @@
 package com.falconteam.bapp.data.repository
 
-import com.falconteam.bapp.data.entity.main.UserEntity
+import com.falconteam.bapp.data.entity.UserEntity
 import com.falconteam.bapp.data.models.Actividad
 import com.falconteam.bapp.data.models.Alumno
 import com.falconteam.bapp.data.models.Bitacora

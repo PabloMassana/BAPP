@@ -33,7 +33,6 @@ import com.falconteam.bapp.domain.usecases.notificacion.MarcarNotificacionComoLe
 import com.falconteam.bapp.domain.usecases.notificacion.ObtenerNotificacionesUseCase
 import com.falconteam.bapp.domain.usecases.perfil.ActualizarRolUseCase
 import com.falconteam.bapp.domain.usecases.perfil.CerrarSesionUseCase
-import com.falconteam.bapp.domain.usecases.teacher.AgregarActividadUseCase
 import com.falconteam.bapp.domain.usecases.teacher.ObtenerActividadesPorMaestroUseCase
 import com.falconteam.bapp.domain.usecases.teacher.ObtenerCursosMaestroUseCase
 import com.falconteam.bapp.domain.usecases.teacher.ObtenerMaestroUseCase
@@ -49,6 +48,7 @@ import com.falconteam.bapp.ui.main.indicadores.IndicadoresViewModel
 import com.falconteam.bapp.ui.main.notifications.NotificacionViewModel
 import com.falconteam.bapp.ui.main.perfil.PerfilViewModel
 import com.falconteam.bapp.ui.main.tasks.BitacoraViewModel
+import com.falconteam.bapp.ui.main.teacheractivity.TeacherActivitiesViewModel
 import com.falconteam.bapp.utils.Constants.SUPABASE_API_KEY
 import com.falconteam.bapp.utils.Constants.SUPABASE_URL
 import io.github.jan.supabase.auth.Auth
@@ -145,7 +145,6 @@ val appModule = module {
     factoryOf(::ObtenerMaestroUseCase)
     factoryOf(::ObtenerCursosMaestroUseCase)
     factoryOf(::ObtenerActividadesPorMaestroUseCase)
-    factoryOf(::AgregarActividadUseCase)
 
     // ViewModels
     viewModelOf(::LoginViewModel)
@@ -160,4 +159,5 @@ val appModule = module {
     viewModelOf(::HomeParentViewModel)
     viewModelOf(::HomeAdminViewModel)
     viewModelOf(::HomeTeacherViewModel)
+    viewModelOf(::TeacherActivitiesViewModel)
 }

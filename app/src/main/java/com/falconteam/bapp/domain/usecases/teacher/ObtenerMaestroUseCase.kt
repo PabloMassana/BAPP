@@ -1,6 +1,6 @@
 package com.falconteam.bapp.domain.usecases.teacher
 
-import com.falconteam.bapp.data.entity.main.TeacherEntity
+import com.falconteam.bapp.data.entity.TeacherEntity
 import com.falconteam.bapp.data.repository.TeacherRepository
 
 class ObtenerMaestroUseCase(

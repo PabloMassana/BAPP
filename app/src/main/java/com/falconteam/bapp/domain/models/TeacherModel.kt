@@ -1,5 +1,5 @@
 package com.falconteam.bapp.domain.models
-import com.falconteam.bapp.data.entity.main.TeacherEntity
+import com.falconteam.bapp.data.entity.TeacherEntity
 
 data class TeacherModel(
     val id: Int,

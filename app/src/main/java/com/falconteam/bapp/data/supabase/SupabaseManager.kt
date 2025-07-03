@@ -1,10 +1,18 @@
 package com.falconteam.bapp.data.supabase
 
-import com.falconteam.bapp.data.entity.main.ParentEntity
-import com.falconteam.bapp.data.entity.main.TeacherEntity
-import com.falconteam.bapp.data.entity.main.UserEntity
-import com.falconteam.bapp.data.models.*
-
+import com.falconteam.bapp.data.entity.ActividadEntity
+import com.falconteam.bapp.data.entity.ParentEntity
+import com.falconteam.bapp.data.entity.TeacherEntity
+import com.falconteam.bapp.data.entity.UserEntity
+import com.falconteam.bapp.data.models.Actividad
+import com.falconteam.bapp.data.models.Alumno
+import com.falconteam.bapp.data.models.Bitacora
+import com.falconteam.bapp.data.models.Curso
+import com.falconteam.bapp.data.models.Evidencia
+import com.falconteam.bapp.data.models.Indicador
+import com.falconteam.bapp.data.models.Mensaje
+import com.falconteam.bapp.data.models.Notificacion
+import com.falconteam.bapp.data.models.Reporte
 import io.github.jan.supabase.auth.user.UserInfo
 
 interface SupabaseManager {
@@ -18,7 +26,7 @@ interface SupabaseManager {
     suspend fun obtenerUsuarioPorId(idUsuario: String): UserEntity
     suspend fun obtenerUsuarioPorEmail(email: String): UserEntity?
 
-    // padres
+    // Padres
     suspend fun insertarPadre(padre: ParentEntity): ParentEntity?
     suspend fun obtenerListadoPadres(): List<ParentEntity>
 
@@ -43,10 +51,10 @@ interface SupabaseManager {
     suspend fun getActividades(alumnoId: String): List<Actividad>
     suspend fun getUltimoReporte(alumnoId: String): Reporte?
 
-    //Profesores
+    // Profesores
     suspend fun getMaestroActual(): TeacherEntity
     suspend fun obtenerCursosPorMaestro(idMaestro: String): List<Curso>
-    suspend fun getActividadesPorMaestro(maestroId: String): List<Actividad>
-    suspend fun agregarActividad(actividad: Actividad, fileBytes: ByteArray): Actividad
+    suspend fun getActividadesPorMaestro(maestroId: String): List<ActividadEntity>
+    suspend fun upsertActividad(actividadEntity: ActividadEntity)
 
 }

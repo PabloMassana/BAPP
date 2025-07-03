@@ -53,7 +53,7 @@ fun BappTopBar(
             Text(text = title)
         },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color(0xFFFFA07A), // Color salmón
+            containerColor = Color(0xFFFFA07A), // Salmón
             titleContentColor = Color.Black
         ),
         actions = {
@@ -82,7 +82,7 @@ fun BappTopBar(
 
             Box(modifier = Modifier.clickable { expandedProfileMenu = true }) {
                 Image(
-                    painter = painterResource(id = R.drawable.parent), // Imagen del usuario
+                    painter = painterResource(id = R.drawable.parent), // Cambia la imagen por la del docente si lo prefieres
                     contentDescription = "Perfil",
                     modifier = Modifier.size(36.dp)
                 )
@@ -95,12 +95,8 @@ fun BappTopBar(
                         onClick = {
                             coroutineScope.launch {
                                 logoutUseCase()
-                                    .onSuccess {
-                                        onNavigate()
-                                    }
-                                    .onFailure {
-                                        println("error al cerrar sesión: ${it.message}")
-                                    }
+                                    .onSuccess { onNavigate() }
+                                    .onFailure { println("Error al cerrar sesión: ${it.message}") }
                             }
                         }
                     )

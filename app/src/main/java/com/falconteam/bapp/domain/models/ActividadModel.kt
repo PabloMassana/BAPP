@@ -1,6 +1,6 @@
 package com.falconteam.bapp.domain.models
 
-import com.falconteam.bapp.data.entity.data.ActividadEntity
+import com.falconteam.bapp.data.entity.ActividadEntity
 import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.*

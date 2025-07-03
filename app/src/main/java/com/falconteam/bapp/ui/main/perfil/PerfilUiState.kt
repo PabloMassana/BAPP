@@ -1,6 +1,6 @@
 package com.falconteam.bapp.ui.main.perfil
 
-import com.falconteam.bapp.data.entity.main.UserEntity
+import com.falconteam.bapp.data.entity.UserEntity
 import com.falconteam.bapp.data.models.Usuario
 
 data class PerfilUiState(
