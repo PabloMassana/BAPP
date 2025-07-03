@@ -1,10 +1,12 @@
 package com.falconteam.bapp.data.supabase
 
-import com.falconteam.bapp.data.entity.ParentEntity
-import com.falconteam.bapp.data.entity.UserEntity
+import com.falconteam.bapp.data.entity.main.ParentEntity
+import com.falconteam.bapp.data.entity.main.TeacherEntity
+import com.falconteam.bapp.data.entity.main.UserEntity
 import com.falconteam.bapp.data.models.Actividad
 import com.falconteam.bapp.data.models.Alumno
 import com.falconteam.bapp.data.models.Bitacora
+import com.falconteam.bapp.data.models.Curso
 import com.falconteam.bapp.data.models.Evidencia
 import com.falconteam.bapp.data.models.Indicador
 import com.falconteam.bapp.data.models.Mensaje
@@ -201,5 +203,45 @@ class SupabaseManagerImpl(
             }
             .decodeList<Reporte>()
             .firstOrNull()
+    }
+
+    override suspend fun getMaestroActual(): TeacherEntity {
+        val userId = supabaseClient.auth.currentUserOrNull()?.id
+            ?: throw IllegalStateException("Usuario no autenticado")
+
+        return supabaseClient.from("usuario")
+            .select {
+                filter { eq("id", userId) }
+            }
+            .decodeSingle()
+    }
+
+    override suspend fun obtenerCursosPorMaestro(idMaestro: String): List<Curso> {
+        return supabaseClient.from("cursos")
+            .select {
+                filter { eq("idMaestro", idMaestro) }
+                order("nombre", Order.ASCENDING)
+            }
+            .decodeList()
+    }
+
+    override suspend fun getActividadesPorMaestro(maestroId: String): List<Actividad> {
+        return supabaseClient.from("actividades")
+            .select {
+                filter { eq("maestro_id", maestroId) }
+                order("fecha", Order.DESCENDING)
+            }
+            .decodeList()
+    }
+
+    override suspend fun agregarActividad(actividad: Actividad, fileBytes: ByteArray): Actividad {
+        val bucket = supabaseClient.storage.from("actividades") // bucket llamado "actividades"
+        bucket.upload(actividad.imagenUrl, fileBytes) {
+            upsert = false
+        }
+
+        return supabaseClient.from("actividades").insert(actividad) {
+            select()
+        }.decodeSingle()
     }
 }

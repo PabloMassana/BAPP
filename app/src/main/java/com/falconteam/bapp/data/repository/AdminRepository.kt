@@ -1,6 +1,6 @@
 package com.falconteam.bapp.data.repository
 
-import com.falconteam.bapp.data.entity.ParentEntity
+import com.falconteam.bapp.data.entity.main.ParentEntity
 import com.falconteam.bapp.data.local.DataStoreHelper
 import com.falconteam.bapp.data.supabase.SupabaseManager
 import kotlinx.coroutines.Dispatchers

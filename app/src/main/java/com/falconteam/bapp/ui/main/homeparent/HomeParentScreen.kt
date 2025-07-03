@@ -23,6 +23,7 @@ import com.falconteam.bapp.R
 import com.falconteam.bapp.data.models.Actividad
 import com.falconteam.bapp.data.models.Alumno
 import com.falconteam.bapp.data.models.Reporte
+import com.falconteam.bapp.ui.main.hometeacher.components.ActivityCard
 import com.falconteam.bapp.ui.theme.BAPPTheme
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -120,7 +121,11 @@ fun HomeParentContent(
                 contentPadding = PaddingValues(horizontal = 4.dp)
             ) {
                 items(actividades.take(5)) { actividad ->
-                    ActividadMiniCard(actividad = actividad)
+                    ActivityCard(
+                        title = actividad.titulo,
+                        time = (actividad.hora ?: "Sin hora").toString(),
+                        imageUrl = actividad.imagenUrl
+                    )
                 }
             }
         }
@@ -146,9 +151,7 @@ fun HomeParentContent(
 @Preview
 @Composable
 fun PreviewHomeParentScreen() {
-    val alumno = Alumno(
-        nombre = "Juanito Diaz",
-    )
+    val alumno = Alumno(nombre = "Juanito Diaz")
     BAPPTheme {
         HomeParentContent(alumno = alumno)
     }

@@ -1,4 +1,4 @@
-package com.falconteam.bapp.data.entity
+package com.falconteam.bapp.data.entity.main
 
 import kotlinx.serialization.Serializable
 

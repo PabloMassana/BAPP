@@ -1,5 +1,6 @@
 package com.falconteam.bapp.di
 
+import androidx.datastore.dataStore
 import com.falconteam.bapp.data.local.DataStoreHelper
 import com.falconteam.bapp.data.local.createDataStore
 import com.falconteam.bapp.data.repository.AdminRepository
@@ -8,6 +9,8 @@ import com.falconteam.bapp.data.repository.AuthRepository
 import com.falconteam.bapp.data.repository.AuthRepositoryImpl
 import com.falconteam.bapp.data.repository.MainRepository
 import com.falconteam.bapp.data.repository.MainRepositoryImpl
+import com.falconteam.bapp.data.repository.TeacherRepository
+import com.falconteam.bapp.data.repository.TeacherRepositoryImpl
 import com.falconteam.bapp.data.supabase.SupabaseManager
 import com.falconteam.bapp.data.supabase.SupabaseManagerImpl
 import com.falconteam.bapp.domain.usecases.admin.ObtenerListadoPadresUseCase
@@ -30,6 +33,10 @@ import com.falconteam.bapp.domain.usecases.notificacion.MarcarNotificacionComoLe
 import com.falconteam.bapp.domain.usecases.notificacion.ObtenerNotificacionesUseCase
 import com.falconteam.bapp.domain.usecases.perfil.ActualizarRolUseCase
 import com.falconteam.bapp.domain.usecases.perfil.CerrarSesionUseCase
+import com.falconteam.bapp.domain.usecases.teacher.AgregarActividadUseCase
+import com.falconteam.bapp.domain.usecases.teacher.ObtenerActividadesPorMaestroUseCase
+import com.falconteam.bapp.domain.usecases.teacher.ObtenerCursosMaestroUseCase
+import com.falconteam.bapp.domain.usecases.teacher.ObtenerMaestroUseCase
 import com.falconteam.bapp.ui.auth.login.LoginViewModel
 import com.falconteam.bapp.ui.auth.signup.SignUpViewModel
 import com.falconteam.bapp.ui.main.chat.ChatViewModel
@@ -37,6 +44,7 @@ import com.falconteam.bapp.ui.main.childparent.ChildParentViewModel
 import com.falconteam.bapp.ui.main.evidencias.GaleriaViewModel
 import com.falconteam.bapp.ui.main.homeadmin.HomeAdminViewModel
 import com.falconteam.bapp.ui.main.homeparent.HomeParentViewModel
+import com.falconteam.bapp.ui.main.hometeacher.HomeTeacherViewModel
 import com.falconteam.bapp.ui.main.indicadores.IndicadoresViewModel
 import com.falconteam.bapp.ui.main.notifications.NotificacionViewModel
 import com.falconteam.bapp.ui.main.perfil.PerfilViewModel
@@ -78,6 +86,13 @@ val appModule = module {
 
     single<AdminRepository> {
         AdminRepositoryImpl(
+            supabaseManager = get(),
+            dataStoreHelper = get()
+        )
+    }
+
+    single<TeacherRepository> {
+        TeacherRepositoryImpl(
             supabaseManager = get(),
             dataStoreHelper = get()
         )
@@ -126,6 +141,12 @@ val appModule = module {
     // Admin
     factoryOf(::ObtenerListadoPadresUseCase)
 
+    // Teacher
+    factoryOf(::ObtenerMaestroUseCase)
+    factoryOf(::ObtenerCursosMaestroUseCase)
+    factoryOf(::ObtenerActividadesPorMaestroUseCase)
+    factoryOf(::AgregarActividadUseCase)
+
     // ViewModels
     viewModelOf(::LoginViewModel)
     viewModelOf(::SignUpViewModel)
@@ -138,4 +159,5 @@ val appModule = module {
     viewModelOf(::BitacoraViewModel)
     viewModelOf(::HomeParentViewModel)
     viewModelOf(::HomeAdminViewModel)
+    viewModelOf(::HomeTeacherViewModel)
 }

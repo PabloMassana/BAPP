@@ -31,7 +31,7 @@ import com.falconteam.bapp.data.models.Task
 import com.falconteam.bapp.ui.main.homeparent.EmojiLine
 import com.falconteam.bapp.ui.main.homeparent.ReportRatingLine
 import com.falconteam.bapp.ui.theme.BAPPTheme
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun MyChildrenScreen(

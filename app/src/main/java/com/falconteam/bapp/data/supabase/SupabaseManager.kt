@@ -1,7 +1,8 @@
 package com.falconteam.bapp.data.supabase
 
-import com.falconteam.bapp.data.entity.ParentEntity
-import com.falconteam.bapp.data.entity.UserEntity
+import com.falconteam.bapp.data.entity.main.ParentEntity
+import com.falconteam.bapp.data.entity.main.TeacherEntity
+import com.falconteam.bapp.data.entity.main.UserEntity
 import com.falconteam.bapp.data.models.*
 
 import io.github.jan.supabase.auth.user.UserInfo
@@ -41,4 +42,11 @@ interface SupabaseManager {
     suspend fun getAlumnoActual(): Alumno
     suspend fun getActividades(alumnoId: String): List<Actividad>
     suspend fun getUltimoReporte(alumnoId: String): Reporte?
+
+    //Profesores
+    suspend fun getMaestroActual(): TeacherEntity
+    suspend fun obtenerCursosPorMaestro(idMaestro: String): List<Curso>
+    suspend fun getActividadesPorMaestro(maestroId: String): List<Actividad>
+    suspend fun agregarActividad(actividad: Actividad, fileBytes: ByteArray): Actividad
+
 }

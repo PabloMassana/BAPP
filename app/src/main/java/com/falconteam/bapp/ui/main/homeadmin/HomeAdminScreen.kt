@@ -34,7 +34,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.falconteam.bapp.R
 import com.falconteam.bapp.ui.components.expandablesection.ExpandableSection
 import com.falconteam.bapp.ui.theme.BAPPTheme
-import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun HomeAdminScreen(

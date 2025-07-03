@@ -1,7 +1,7 @@
 package com.falconteam.bapp.data.repository
 
-import com.falconteam.bapp.data.entity.ParentEntity
-import com.falconteam.bapp.data.entity.UserEntity
+import com.falconteam.bapp.data.entity.main.ParentEntity
+import com.falconteam.bapp.data.entity.main.UserEntity
 import com.falconteam.bapp.data.local.DataStoreHelper
 import com.falconteam.bapp.data.local.DataStoreHelper.Companion.USER_ID
 import com.falconteam.bapp.data.local.DataStoreHelper.Companion.USER_JWT_TOKEN_KEY

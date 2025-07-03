@@ -1,8 +1,13 @@
 package com.falconteam.bapp.data.models
 
+import java.sql.Time
+import java.util.Date
+
 data class Actividad(
+    val id: Int,
+    val fecha: Date,
     val titulo: String,
-    val fecha: String,
-    val hora: String,
-    val Imagenes: List<String> = emptyList()
+    val hora: Time,
+    val imagenUrl: String,
+    val cursoId: Int
 )

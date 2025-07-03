@@ -1,6 +1,6 @@
 package com.falconteam.bapp.domain.models
 
-import com.falconteam.bapp.data.entity.ParentEntity
+import com.falconteam.bapp.data.entity.main.ParentEntity
 import com.falconteam.bapp.ui.components.expandablesection.SectionAction
 import com.falconteam.bapp.ui.components.expandablesection.SectionItem
 

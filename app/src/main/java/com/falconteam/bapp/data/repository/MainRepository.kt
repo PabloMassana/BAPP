@@ -1,9 +1,10 @@
 package com.falconteam.bapp.data.repository
 
-import com.falconteam.bapp.data.entity.UserEntity
+import com.falconteam.bapp.data.entity.main.UserEntity
 import com.falconteam.bapp.data.models.Actividad
 import com.falconteam.bapp.data.models.Alumno
 import com.falconteam.bapp.data.models.Bitacora
+import com.falconteam.bapp.data.models.Curso
 import com.falconteam.bapp.data.models.Evidencia
 import com.falconteam.bapp.data.models.Indicador
 import com.falconteam.bapp.data.models.Mensaje
@@ -107,6 +108,5 @@ class MainRepositoryImpl(
     override suspend fun obtenerUltimoReportePorAlumno(alumnoId: String): Reporte? {
         return supabaseManager.getUltimoReporte(alumnoId)
     }
-
 }
 
