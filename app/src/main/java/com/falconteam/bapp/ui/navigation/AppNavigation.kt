@@ -6,11 +6,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.falconteam.bapp.ui.auth.login.LoginScreen
 import com.falconteam.bapp.ui.auth.signup.SignUpScreen
-import com.falconteam.bapp.ui.main.HomeScreen
-import com.falconteam.bapp.ui.main.chat.ChatScreen
-import com.falconteam.bapp.ui.main.evidencias.GalleryScreen
-import com.falconteam.bapp.ui.main.indicadores.IndicadoresScreen
-import com.falconteam.bapp.ui.main.notifications.NotificationsScreen
+import com.falconteam.bapp.ui.main.homeadmin.AdminBaseScreen
+import com.falconteam.bapp.ui.main.homeparent.HomeParentScreen
+import com.falconteam.bapp.ui.main.homeparent.ParentBaseScreen
+import com.falconteam.bapp.ui.main.hometeacher.TeacherBaseScreen
 import com.falconteam.bapp.ui.main.perfil.ProfileScreen
 import com.falconteam.bapp.ui.main.roles.RolSelectScreen
 import com.falconteam.bapp.ui.main.tasks.BitacoraScreen
@@ -19,8 +18,8 @@ import com.falconteam.bapp.ui.main.tasks.BitacoraScreen
 fun AppNavigation(navController: NavHostController) {
     NavHost(navController = navController, startDestination = NavigationRoutes.Login) {
         composable<NavigationRoutes.Login> {
-            LoginScreen {
-                navController.navigate(NavigationRoutes.SignUp)
+            LoginScreen { destination ->
+                navController.navigate(destination)
             }
         }
         composable<NavigationRoutes.SignUp> {
@@ -28,13 +27,20 @@ fun AppNavigation(navController: NavHostController) {
                 navController.navigate(NavigationRoutes.Login)
             }
         }
-        composable<NavigationRoutes.Home> { HomeScreen() }
-        composable<NavigationRoutes.Bitacora> { BitacoraScreen() }
-//        composable<NavigationRoutes.Chat> { ChatScreen() }
-//        composable<NavigationRoutes.Gallery> { GalleryScreen() }
-//        composable<NavigationRoutes.Indicadores> { IndicadoresScreen() }
-        composable<NavigationRoutes.Profile> { ProfileScreen() }
-//        composable<NavigationRoutes.Notifications> { NotificationsScreen() }
-        composable<NavigationRoutes.RolSelect> { RolSelectScreen() }
+        composable<NavigationRoutes.HomeTeacherDestination.HomeTeacherNavGraph> {
+            TeacherBaseScreen(
+                rootNavController = navController
+            )
+        }
+        composable<NavigationRoutes.HomeParentDestination.HomeParentNavGraph> {
+            ParentBaseScreen(
+                rootNavController = navController
+            )
+        }
+        composable<NavigationRoutes.HomeAdminDestination.HomeAdminNavGraph> {
+            AdminBaseScreen(
+                rootNavController = navController
+            )
+        }
     }
 }

@@ -1,10 +1,15 @@
 package com.falconteam.bapp.data.repository
 
+import com.falconteam.bapp.data.entity.UserEntity
+import com.falconteam.bapp.data.models.Actividad
+import com.falconteam.bapp.data.models.Alumno
 import com.falconteam.bapp.data.models.Bitacora
+import com.falconteam.bapp.data.models.Curso
 import com.falconteam.bapp.data.models.Evidencia
 import com.falconteam.bapp.data.models.Indicador
 import com.falconteam.bapp.data.models.Mensaje
 import com.falconteam.bapp.data.models.Notificacion
+import com.falconteam.bapp.data.models.Reporte
 import com.falconteam.bapp.data.models.Usuario
 import com.falconteam.bapp.data.supabase.SupabaseManager
 import kotlinx.coroutines.Dispatchers
@@ -26,10 +31,13 @@ interface MainRepository {
     suspend fun obtenerNotificaciones(usuarioId: String): List<Notificacion>
     suspend fun marcarNotificacionComoLeida(notificacionId: String)
 
-    suspend fun obtenerUsuario(userId: String): Usuario
+    suspend fun obtenerUsuario(userId: String): UserEntity
     suspend fun actualizarRol(userId: String, nuevoRol: String)
     suspend fun cerrarSesion()
 
+    suspend fun obtenerAlumnoActual(): Alumno
+    suspend fun obtenerActividadesPorAlumno(alumnoId: String): List<Actividad>
+    suspend fun obtenerUltimoReportePorAlumno(alumnoId: String): Reporte?
 
 }
 
@@ -77,7 +85,7 @@ class MainRepositoryImpl(
         supabaseManager.marcarNotificacionComoLeida(notificacionId)
     }
 
-    override suspend fun obtenerUsuario(userId: String): Usuario {
+    override suspend fun obtenerUsuario(userId: String): UserEntity {
         return supabaseManager.obtenerUsuarioPorId(userId)
     }
 
@@ -89,5 +97,16 @@ class MainRepositoryImpl(
         supabaseManager.cerrarSesion()
     }
 
+    override suspend fun obtenerAlumnoActual(): Alumno {
+        return supabaseManager.getAlumnoActual()
+    }
+
+    override suspend fun obtenerActividadesPorAlumno(alumnoId: String): List<Actividad> {
+        return supabaseManager.getActividades(alumnoId)
+    }
+
+    override suspend fun obtenerUltimoReportePorAlumno(alumnoId: String): Reporte? {
+        return supabaseManager.getUltimoReporte(alumnoId)
+    }
 }
 

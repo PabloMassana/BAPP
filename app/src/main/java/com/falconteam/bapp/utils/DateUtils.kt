@@ -9,3 +9,8 @@ object DateUtils {
         return formatter.format(date)
     }
 }
+
+fun obtenerDiaDesdeFecha(fecha: Date): String {
+    val formato = SimpleDateFormat("EEEE", Locale("es", "ES"))
+    return formato.format(fecha).replaceFirstChar { it.uppercaseChar() }
+}

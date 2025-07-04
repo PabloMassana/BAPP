@@ -76,9 +76,7 @@ dependencies {
     implementation(libs.koin.core)
     implementation(libs.koin.android)
     implementation(libs.koin.compose)
-
-    //imagenes del navegador
-    implementation(libs.coil.compose)
+    implementation(libs.koin.viewmodel)
 
     implementation(libs.androidx.navigation.compose)
 
@@ -86,5 +84,8 @@ dependencies {
     implementation(libs.kotlinx.datetime)
 
     //Data Store
+    implementation(libs.androidx.datastore.core)
     implementation(libs.androidx.datastore.preferences)
+
+    implementation(libs.coil.compose)
 }

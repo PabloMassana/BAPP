@@ -1,9 +1,10 @@
 package com.falconteam.bapp.ui.main.perfil
 
+import com.falconteam.bapp.data.entity.UserEntity
 import com.falconteam.bapp.data.models.Usuario
 
 data class PerfilUiState(
     val isLoading: Boolean = false,
-    val usuario: Usuario? = null,
+    val usuario: UserEntity? = null,
     val error: String? = null
 )

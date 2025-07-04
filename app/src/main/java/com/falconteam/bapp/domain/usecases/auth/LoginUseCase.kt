@@ -8,12 +8,7 @@ import kotlin.Result
 class LoginUseCase: KoinComponent {
     private val authRepository: AuthRepository by inject()
 
-    suspend operator fun invoke(email: String, password: String): Result<Boolean> {
-        return try {
-            authRepository.login(email, password)
-            Result.success(true)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
+    suspend operator fun invoke(email: String, password: String) = authRepository.login(
+        email, password
+    )
 }
