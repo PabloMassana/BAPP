@@ -23,6 +23,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.falconteam.bapp.ui.components.appbar.BappNavigationBar
 import com.falconteam.bapp.ui.components.appbar.BappTopBar
+import com.falconteam.bapp.ui.navigation.NavigationRoutes
 import com.falconteam.bapp.ui.navigation.graph.HomeParentNavGraph
 
 @Composable
@@ -42,7 +43,9 @@ fun ParentBaseScreenContent(modifier: Modifier = Modifier, rootNavController: Na
 
     Scaffold(
         topBar = {
-            BappTopBar(title = selectedItem.label)
+            BappTopBar(title = selectedItem.label) {
+                rootNavController.navigate(NavigationRoutes.Login)
+            }
         },
         bottomBar = {
             BappNavigationBar(

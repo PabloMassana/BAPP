@@ -1,7 +1,10 @@
 package com.falconteam.bapp.data.supabase
 
+import com.falconteam.bapp.data.entity.CourseEntity
 import com.falconteam.bapp.data.entity.ActividadEntity
 import com.falconteam.bapp.data.entity.ParentEntity
+import com.falconteam.bapp.data.entity.StudentCourseEntity
+import com.falconteam.bapp.data.entity.StudentEntity
 import com.falconteam.bapp.data.entity.TeacherEntity
 import com.falconteam.bapp.data.entity.UserEntity
 import com.falconteam.bapp.data.models.Actividad
@@ -19,6 +22,7 @@ import io.github.jan.supabase.auth.providers.builtin.Email
 import io.github.jan.supabase.auth.user.UserInfo
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Order
+import io.github.jan.supabase.postgrest.result.PostgrestResult
 import io.github.jan.supabase.storage.storage
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
@@ -28,6 +32,13 @@ class SupabaseManagerImpl(
 ) : SupabaseManager {
 
     override fun getSessionTokenOrNull(): String? = supabaseClient.auth.currentAccessTokenOrNull()
+
+    override suspend fun retrieveUserSession(token: String): UserInfo {
+        val user = supabaseClient.auth.retrieveUser(token)
+        supabaseClient.auth.refreshCurrentSession()
+
+        return user
+    }
 
     override suspend fun loginSupabase(emailUser: String, passwordUser: String): String? {
         supabaseClient.auth.signInWith(Email) {
@@ -83,6 +94,40 @@ class SupabaseManagerImpl(
         supabaseClient.from("padre").select {
             order("id", Order.ASCENDING)
         }.decodeList<ParentEntity>()
+
+    override suspend fun eliminarPadre(padreId: Int): ParentEntity =
+        supabaseClient.from("padre").delete {
+            filter { eq("id", padreId) }
+            select()
+        }.decodeSingle()
+
+    override suspend fun insertarGrupo(grupo: CourseEntity): CourseEntity =
+        supabaseClient.from("curso").insert(grupo) {
+            select()
+        }.decodeSingle<CourseEntity>()
+
+    override suspend fun obtenerGrupos(): List<CourseEntity> =
+        supabaseClient.from("curso").select {
+            order("id", Order.ASCENDING)
+        }.decodeList()
+
+    override suspend fun obtenerAlumnos(): List<StudentEntity> =
+        supabaseClient.from("hijo").select {
+            order("id", Order.ASCENDING)
+        }.decodeList()
+
+    override suspend fun insertarAlumno(alumno: StudentEntity): StudentEntity =
+        supabaseClient.from("hijo").insert(alumno) {
+            select()
+        }.decodeSingle<StudentEntity>()
+
+    override suspend fun insertarAlumnoCurso(
+        studentCourseEntity: StudentCourseEntity
+    ): StudentCourseEntity = supabaseClient.from("curso_alumno").insert(
+        studentCourseEntity
+    ) {
+        select()
+    }.decodeSingle<StudentCourseEntity>()
 
     override suspend fun insertarMensajeChat(mensaje: Mensaje) {
         supabaseClient.from("chat_messages").insert(mensaje)
@@ -160,9 +205,11 @@ class SupabaseManagerImpl(
     }
 
     override suspend fun actualizarRolUsuario(userId: String, nuevoRol: String) {
-        supabaseClient.from("usuarios")
+        supabaseClient.from("usuario")
             .update(
-                update = {}
+                {
+                    set("rol", nuevoRol)
+                }
             ) {
                 filter { eq("id", userId) }
             }
@@ -204,6 +251,11 @@ class SupabaseManagerImpl(
             .decodeList<Reporte>()
             .firstOrNull()
     }
+
+    override suspend fun insertarMaestro(maestro: TeacherEntity): TeacherEntity =
+        supabaseClient.from("profesor").insert(maestro) {
+            select()
+        }.decodeSingle<TeacherEntity>()
 
     override suspend fun getMaestroActual(): TeacherEntity {
         val userId = supabaseClient.auth.currentUserOrNull()?.id

@@ -15,18 +15,17 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -49,7 +48,6 @@ import com.falconteam.bapp.R
 import com.falconteam.bapp.ui.navigation.NavigationRoutes
 import com.falconteam.bapp.ui.theme.BAPPTheme
 import com.falconteam.bapp.utils.UserRole
-import io.github.jan.supabase.realtime.Column
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -62,7 +60,7 @@ fun LoginScreen(
     LaunchedEffect(uiState.userRole) {
         when (uiState.userRole) {
             UserRole.ADMIN -> onNavigate(NavigationRoutes.HomeAdminDestination.HomeAdminNavGraph)
-            UserRole.TEACHER -> onNavigate(NavigationRoutes.HomeTeacherDestination.HomeTeacher)
+            UserRole.TEACHER -> onNavigate(NavigationRoutes.HomeTeacherDestination.HomeTeacherNavGraph)
             UserRole.PARENT -> onNavigate(NavigationRoutes.HomeParentDestination.HomeParentNavGraph)
             null -> Unit
         }
@@ -109,7 +107,7 @@ fun LoginScreenContent(
 
             // Logo
             Image(
-                painter = painterResource(id = R.mipmap.logo_foreground), // Cambia por tu recurso real
+                painter = painterResource(id = R.mipmap.ic_launcher_foreground), // Cambia por tu recurso real
                 contentDescription = "Icono de login",
                 modifier = Modifier.size(120.dp)
             )
@@ -165,16 +163,23 @@ fun LoginScreenContent(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    Button(
-                        onClick = onLoginClick,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(48.dp)
-                            .shadow(4.dp, RoundedCornerShape(50)),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFEB786F)),
-                        shape = RoundedCornerShape(50)
-                    ) {
-                        Text("Iniciar sesión", color = Color.White)
+                    if (uiState.loading) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(24.dp),
+                            color = Color(0xFFFF7F56)
+                        )
+                    } else {
+                        Button(
+                            onClick = onLoginClick,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(48.dp)
+                                .shadow(4.dp, RoundedCornerShape(50)),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFEB786F)),
+                            shape = RoundedCornerShape(50)
+                        ) {
+                            Text("Iniciar sesión", color = Color.White)
+                        }
                     }
 
                     if (uiState.errorMessage != null) {

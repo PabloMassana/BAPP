@@ -6,7 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.falconteam.bapp.ui.main.aprobaradmin.AprobarAdminScreen
-import com.falconteam.bapp.ui.main.borraradmin.BorrarAdminScreen
+import com.falconteam.bapp.ui.main.borraradmin.DeleteAdminScreen
 import com.falconteam.bapp.ui.main.homeadmin.HomeAdminScreen
 import com.falconteam.bapp.ui.navigation.NavigationRoutes
 
@@ -25,10 +25,7 @@ fun HomeAdminNavGraph(
             HomeAdminScreen()
         }
         composable<NavigationRoutes.HomeAdminDestination.DeleteAdmin> {
-            BorrarAdminScreen(
-                cursos = emptyList(),
-                estudiantes = emptyList()
-            ) { }
+            DeleteAdminScreen()
         }
         composable<NavigationRoutes.HomeAdminDestination.TeachersManagementAdmin> {
             AprobarAdminScreen()

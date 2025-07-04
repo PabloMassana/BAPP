@@ -1,7 +1,10 @@
 package com.falconteam.bapp.data.supabase
 
+import com.falconteam.bapp.data.entity.CourseEntity
 import com.falconteam.bapp.data.entity.ActividadEntity
 import com.falconteam.bapp.data.entity.ParentEntity
+import com.falconteam.bapp.data.entity.StudentCourseEntity
+import com.falconteam.bapp.data.entity.StudentEntity
 import com.falconteam.bapp.data.entity.TeacherEntity
 import com.falconteam.bapp.data.entity.UserEntity
 import com.falconteam.bapp.data.models.Actividad
@@ -14,11 +17,13 @@ import com.falconteam.bapp.data.models.Mensaje
 import com.falconteam.bapp.data.models.Notificacion
 import com.falconteam.bapp.data.models.Reporte
 import io.github.jan.supabase.auth.user.UserInfo
+import io.github.jan.supabase.postgrest.result.PostgrestResult
 
 interface SupabaseManager {
 
     // Usuarios
     fun getSessionTokenOrNull(): String?
+    suspend fun retrieveUserSession(token: String): UserInfo
     suspend fun loginSupabase(emailUser: String, passwordUser: String): String?
     suspend fun signUpUserSupabase(emailUser: String, passwordUser: String, userName: String): UserInfo?
     suspend fun cerrarSesion()
@@ -29,6 +34,18 @@ interface SupabaseManager {
     // Padres
     suspend fun insertarPadre(padre: ParentEntity): ParentEntity?
     suspend fun obtenerListadoPadres(): List<ParentEntity>
+    suspend fun eliminarPadre(padreId: Int): ParentEntity
+
+    // grupos
+    suspend fun insertarGrupo(grupo: CourseEntity): CourseEntity
+    suspend fun obtenerGrupos(): List<CourseEntity>
+
+    // alumnos
+    suspend fun obtenerAlumnos(): List<StudentEntity>
+
+    suspend fun insertarAlumno(alumno: StudentEntity): StudentEntity
+
+    suspend fun insertarAlumnoCurso(studentCourseEntity: StudentCourseEntity): StudentCourseEntity
 
     suspend fun insertarMensajeChat(mensaje: Mensaje)
     suspend fun obtenerMensajesChat(conversacionId: String): List<Mensaje>
@@ -52,6 +69,7 @@ interface SupabaseManager {
     suspend fun getUltimoReporte(alumnoId: String): Reporte?
 
     // Profesores
+    suspend fun insertarMaestro(maestro: TeacherEntity): TeacherEntity
     suspend fun getMaestroActual(): TeacherEntity
     suspend fun obtenerCursosPorMaestro(idMaestro: String): List<Curso>
     suspend fun getActividadesPorMaestro(maestroId: String): List<ActividadEntity>

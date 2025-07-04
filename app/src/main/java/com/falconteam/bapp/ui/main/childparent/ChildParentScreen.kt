@@ -195,12 +195,12 @@ fun ChildParentScreenPreview() {
     )
 
     val tareas = listOf(
-        Task("1", "Practica los colores con Juanito", "Refuerzo de colores primarios"),
-        Task("2", "Practica los números del 1 al 10", "Aprender a contar")
+        Task(1, "Practica los colores con Juanito", "Refuerzo de colores primarios"),
+        Task(2, "Practica los números del 1 al 10", "Aprender a contar")
     )
 
     val completadas = listOf(
-        Task("3", "Colorea un dibujo", "Motricidad fina", completada = true)
+        Task(3, "Colorea un dibujo", "Motricidad fina", completada = true)
     )
 
     BAPPTheme {

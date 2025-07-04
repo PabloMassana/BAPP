@@ -95,7 +95,7 @@ fun DayTeacherCard(
         Spacer(modifier = Modifier.height(12.dp))
 
         activities.forEach { activity ->
-            ActivityTeacherItem(activity = activity, onEdit = { onEdit(activity) })
+            ActivityTeacherItem(activity = activity, onEdit = { /*onEdit(activity)*/ })
             Spacer(modifier = Modifier.height(12.dp))
         }
     }

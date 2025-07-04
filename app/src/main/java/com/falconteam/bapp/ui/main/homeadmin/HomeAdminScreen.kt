@@ -2,7 +2,9 @@ package com.falconteam.bapp.ui.main.homeadmin
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,14 +12,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,39 +46,69 @@ fun HomeAdminScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(Unit) {
-        viewModel.getParentsList()
+    HomeAdminContent(uiState) {
+        viewModel.onStart()
     }
-
-    HomeAdminContent(uiState)
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeAdminContent(
-    uiState: HomeAdminUiState
+    uiState: HomeAdminUiState,
+    onRefreshAction: () -> Unit = {}
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    listOf(Color(0xFFFFA07A), Color.White)
-                )
-            )
-            .padding(4.dp)
+    PullToRefreshBox(
+        isRefreshing = uiState.isLoading,
+        onRefresh = { onRefreshAction() },
+        modifier = Modifier.fillMaxSize()
     ) {
-        AdminHeader(name = "Administración", avatarRes = R.drawable.hijo)
+        LazyColumn (
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    Brush.verticalGradient(
+                        listOf(Color(0xFFFFA07A), Color.White)
+                    )
+                ),
+            contentPadding = PaddingValues(horizontal = 24.dp),
+            verticalArrangement = Arrangement.spacedBy(24.dp)
+        ) {
+            item{
+                AdminHeader(name = "Administración", avatarRes = R.drawable.parent)
+            }
 
-        Spacer(modifier = Modifier.height(24.dp))
+            item {
+                ExpandableSection(
+                    modifier = Modifier.fillMaxWidth(),
+                    sectionTitle = "Grupos existentes",
+                    sectionItemsShowed = uiState.courseListShowed,
+                    sectionItemsRemaining = uiState.courseListRemaining,
+                    isLoading = uiState.isLoading
+                )
+            }
 
-        ExpandableSection(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp),
-            sectionTitle = "Padres registrados",
-            sectionItemsShowed = uiState.parentListShowed,
-            sectionItemsRemaining = uiState.parentListRemaining,
-        )
+            item {
+                ExpandableSection(
+                    modifier = Modifier.fillMaxWidth(),
+                    sectionTitle = "Alumnos registrados",
+                    sectionItemsShowed = uiState.studentListShowed,
+                    sectionItemsRemaining = uiState.studentListRemaining,
+                    isLoading = uiState.isLoading
+                )
+            }
+
+            item {
+                ExpandableSection(
+                    modifier = Modifier.fillMaxWidth(),
+                    sectionTitle = "Padres registrados",
+                    sectionItemsShowed = uiState.parentListShowed,
+                    sectionItemsRemaining = uiState.parentListRemaining,
+                    isLoading = uiState.isLoading
+                )
+                Spacer(Modifier.height(24.dp))
+            }
+        }
     }
-
 }
 
 @Composable
@@ -82,8 +116,7 @@ fun AdminHeader(name: String, avatarRes: Int) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .wrapContentHeight()
-            .padding(horizontal = 24.dp),
+            .wrapContentHeight(),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.7f))
     ) {

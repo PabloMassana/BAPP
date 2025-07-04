@@ -13,6 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 interface AuthRepository {
+    suspend fun retrieveUserSessionOrNull(): Result<UserInfo?>
     suspend fun login(email: String, password: String): Result<UserEntity>
     suspend fun signUp(email: String, password: String, username: String): Result<UserInfo?>
     suspend fun logout(): Result<Boolean>
@@ -24,6 +25,26 @@ class AuthRepositoryImpl(
     private val supabaseManager: SupabaseManager,
     private val dataStoreHelper: DataStoreHelper
 ) : AuthRepository {
+
+    override suspend fun retrieveUserSessionOrNull(): Result<UserInfo?> = withContext(Dispatchers.IO) {
+        try {
+            val token = dataStoreHelper.getValue(USER_JWT_TOKEN_KEY, "")
+
+            if (token.isEmpty()) {
+                // User is not logged in
+                return@withContext Result.success(null)
+            } else {
+                val user = supabaseManager.retrieveUserSession(token)
+                val newToken = supabaseManager.getSessionTokenOrNull()
+                dataStoreHelper.putValue(USER_JWT_TOKEN_KEY, newToken.toString())
+
+                return@withContext Result.success(user)
+            }
+
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 
     override suspend fun login(email: String, password: String): Result<UserEntity> =
         withContext(Dispatchers.IO) {
@@ -63,8 +84,7 @@ class AuthRepositoryImpl(
             )
             val parentEntity = ParentEntity(
                 name = username,
-                lastname = "",
-                userId = userInfo?.id.orEmpty()
+                lastname = ""
             )
 
             val savedUser = saveUser(userEntity)

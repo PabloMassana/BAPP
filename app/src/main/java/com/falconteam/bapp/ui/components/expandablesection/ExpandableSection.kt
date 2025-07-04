@@ -34,10 +34,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.falconteam.bapp.ui.theme.BAPPTheme
+import io.github.jan.supabase.realtime.Column
 
 @Composable
 fun ExpandableSection(
@@ -52,6 +54,7 @@ fun ExpandableSection(
     Card(
         modifier = modifier,
         shape = RoundedCornerShape(18.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
         colors = CardDefaults.cardColors(containerColor = Color(0xFFFFE0D0))
     ) {
         if (isLoading) {
@@ -66,21 +69,31 @@ fun ExpandableSection(
                 )
             }
         } else {
-            LazyColumn(
-                userScrollEnabled = false,
-                contentPadding = PaddingValues(16.dp),
+            Column(
+                modifier = Modifier.padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                item {
+
+                Text(
+                    text = sectionTitle,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 15.sp
+                )
+                Spacer(Modifier.height(16.dp))
+
+                if (sectionItemsShowed.isEmpty()) {
                     Text(
-                        text = sectionTitle,
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 15.sp
+                        text = "No hay elementos para mostrar",
+                        fontSize = 14.sp,
+                        color = Color.Gray,
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center
                     )
                     Spacer(Modifier.height(16.dp))
+                    return@Column
                 }
 
-                items(sectionItemsShowed) {
+                sectionItemsShowed.forEach {
                     ExpandableSectionItem(
                         id = it.id,
                         name = it.name,
@@ -88,39 +101,35 @@ fun ExpandableSection(
                     )
                 }
 
-                item {
-                    AnimatedVisibility(
-                        visible = expanded && sectionItemsRemaining.isNullOrEmpty().not()
-                    ) {
-                        Column {
-                            sectionItemsRemaining?.forEach {
-                                ExpandableSectionItem(
-                                    id = it.id,
-                                    name = it.name,
-                                    itemActions = it.actions
-                                )
-                                Spacer(Modifier.height(8.dp))
-                            }
+                AnimatedVisibility(
+                    visible = expanded && sectionItemsRemaining.isNullOrEmpty().not()
+                ) {
+                    Column {
+                        sectionItemsRemaining?.forEach {
+                            ExpandableSectionItem(
+                                id = it.id,
+                                name = it.name,
+                                itemActions = it.actions
+                            )
+                            Spacer(Modifier.height(8.dp))
                         }
                     }
                 }
 
-                item {
-                    Box(
-                        modifier = Modifier.fillMaxWidth(),
-                        contentAlignment = Alignment.CenterEnd
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    IconButton(
+                        onClick = { expanded = expanded.not() },
+                        modifier = Modifier.size(24.dp)
                     ) {
-                        IconButton(
-                            onClick = { expanded = expanded.not() },
-                            modifier = Modifier.size(24.dp)
-                        ) {
-                            Icon(
-                                modifier = Modifier.rotate(if (expanded) 180f else 0f),
-                                imageVector = Icons.Default.ArrowDropDown,
-                                contentDescription = "Expand",
-                                tint = Color.Black
-                            )
-                        }
+                        Icon(
+                            modifier = Modifier.rotate(if (expanded) 180f else 0f),
+                            imageVector = Icons.Default.ArrowDropDown,
+                            contentDescription = "Expand",
+                            tint = Color.Black
+                        )
                     }
                 }
             }
@@ -153,7 +162,7 @@ fun ExpandableSectionItem(
             )
             itemActions.forEach {
                 Button(
-                    modifier = Modifier.height(32.dp),
+                    modifier = Modifier.height(32.dp).padding(horizontal = 2.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF09985)),
                     contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp),
                     onClick = { it.onClick(id) }
@@ -177,14 +186,15 @@ private fun ExpandableSectionPreview() {
                     id = 1,
                     name = "Grupo A",
                     actions = listOf(
-                        SectionAction(label = "Asignar hijo", onClick = { /* TODO */ }),
+                        SectionAction(label = "Alumnos", onClick = {}),
+                        SectionAction(label = "Docente", onClick = {}),
                     )
                 ),
                 SectionItem(
                     id = 2,
                     name = "Grupo B",
                     actions = listOf(
-                        SectionAction(label = "Asignar hijo", onClick = { /* TODO */ }),
+                        SectionAction(label = "Asignar hijo", onClick = {}),
                     )
                 )
             ),
@@ -193,14 +203,14 @@ private fun ExpandableSectionPreview() {
                     id = 3,
                     name = "Grupo C",
                     actions = listOf(
-                        SectionAction(label = "Asignar hijo", onClick = { /* TODO */ }),
+                        SectionAction(label = "Asignar hijo", onClick = {}),
                     )
                 ),
                 SectionItem(
                     id = 4,
                     name = "Grupo D",
                     actions = listOf(
-                        SectionAction(label = "Asignar hijo", onClick = { /* TODO */ }),
+                        SectionAction(label = "Asignar hijo", onClick = {}),
                     )
                 )
             )

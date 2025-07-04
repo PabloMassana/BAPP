@@ -86,7 +86,7 @@ fun SignUpScreenContent(
             // Icono superior
             Spacer(modifier = Modifier.height(40.dp))
             Image(
-                painter = painterResource(id =  R.mipmap.logo_foreground), // Cambia por tu recurso real
+                painter = painterResource(id =  R.mipmap.ic_launcher_foreground), // Cambia por tu recurso real
                 contentDescription = "Icono de registro",
                 modifier = Modifier.size(120.dp)
             )

@@ -19,7 +19,7 @@ fun ParentEntity.toDomainModel() = ParentModel(
 )
 
 fun List<ParentModel>.toListSectionItem(
-    onClick: (Int) -> Unit = {}
+    onClick: (Int) -> Unit
 ): List<SectionItem> {
     return this.map { parent ->
         SectionItem(

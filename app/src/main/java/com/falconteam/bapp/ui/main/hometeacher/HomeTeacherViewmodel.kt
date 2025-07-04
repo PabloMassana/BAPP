@@ -39,7 +39,7 @@ class HomeTeacherViewModel(
 
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,
-                    actividades = actividades,
+                    // actividades = actividades,
                     cursos = cursos,
                     teacherName = nombreCompleto
                 )

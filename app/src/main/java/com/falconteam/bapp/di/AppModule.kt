@@ -13,6 +13,11 @@ import com.falconteam.bapp.data.repository.TeacherRepository
 import com.falconteam.bapp.data.repository.TeacherRepositoryImpl
 import com.falconteam.bapp.data.supabase.SupabaseManager
 import com.falconteam.bapp.data.supabase.SupabaseManagerImpl
+import com.falconteam.bapp.domain.usecases.admin.AprobarDocenteUseCase
+import com.falconteam.bapp.domain.usecases.admin.InsertarAlumnoCursoUseCase
+import com.falconteam.bapp.domain.usecases.admin.InsertarCursoUseCase
+import com.falconteam.bapp.domain.usecases.admin.ObtenerListadoAlumnosUseCase
+import com.falconteam.bapp.domain.usecases.admin.ObtenerListadoCursosUseCase
 import com.falconteam.bapp.domain.usecases.admin.ObtenerListadoPadresUseCase
 import com.falconteam.bapp.domain.usecases.alumno.ObtenerActividadesUseCase
 import com.falconteam.bapp.domain.usecases.alumno.ObtenerAlumnoUseCase
@@ -20,6 +25,7 @@ import com.falconteam.bapp.domain.usecases.alumno.ObtenerUltimoReporteUseCase
 import com.falconteam.bapp.domain.usecases.auth.LoginUseCase
 import com.falconteam.bapp.domain.usecases.auth.LogoutUseCase
 import com.falconteam.bapp.domain.usecases.auth.ObtenerRolUsuarioUseCase
+import com.falconteam.bapp.domain.usecases.auth.ObtenerSesionUsuarioUseCase
 import com.falconteam.bapp.domain.usecases.auth.SignUpUseCase
 import com.falconteam.bapp.domain.usecases.bitacora.AgregarBitacoraUseCase
 import com.falconteam.bapp.domain.usecases.bitacora.ObtenerBitacorasUseCase
@@ -38,6 +44,8 @@ import com.falconteam.bapp.domain.usecases.teacher.ObtenerCursosMaestroUseCase
 import com.falconteam.bapp.domain.usecases.teacher.ObtenerMaestroUseCase
 import com.falconteam.bapp.ui.auth.login.LoginViewModel
 import com.falconteam.bapp.ui.auth.signup.SignUpViewModel
+import com.falconteam.bapp.ui.main.aprobaradmin.AprobarAdminViewModel
+import com.falconteam.bapp.ui.main.borraradmin.DeleteAdminViewModel
 import com.falconteam.bapp.ui.main.chat.ChatViewModel
 import com.falconteam.bapp.ui.main.childparent.ChildParentViewModel
 import com.falconteam.bapp.ui.main.evidencias.GaleriaViewModel
@@ -107,6 +115,7 @@ val appModule = module {
     factoryOf(::LogoutUseCase)
     factoryOf(::ObtenerRolUsuarioUseCase)
     factoryOf(::SignUpUseCase)
+    factoryOf(::ObtenerSesionUsuarioUseCase)
 
     // Use Cases - Bitácora
     factoryOf(::AgregarBitacoraUseCase)
@@ -140,6 +149,11 @@ val appModule = module {
 
     // Admin
     factoryOf(::ObtenerListadoPadresUseCase)
+    factoryOf(::ObtenerListadoCursosUseCase)
+    factoryOf(::ObtenerListadoAlumnosUseCase)
+    factoryOf(::InsertarCursoUseCase)
+    factoryOf(::AprobarDocenteUseCase)
+    factoryOf(::InsertarAlumnoCursoUseCase)
 
     // Teacher
     factoryOf(::ObtenerMaestroUseCase)
@@ -158,6 +172,8 @@ val appModule = module {
     viewModelOf(::BitacoraViewModel)
     viewModelOf(::HomeParentViewModel)
     viewModelOf(::HomeAdminViewModel)
+    viewModelOf(::DeleteAdminViewModel)
     viewModelOf(::HomeTeacherViewModel)
     viewModelOf(::TeacherActivitiesViewModel)
+    viewModelOf(::AprobarAdminViewModel)
 }
